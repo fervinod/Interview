@@ -1,0 +1,22 @@
+If you're planning to get into DevOps in 2026, stop learning like it's 2020.
+>> Choose Kubernetes. Every serious job posting demands real K8s experience. Every important platform runs on it.
+
+>> Choose GitHub Actions over Jenkins. Jenkins feels like maintaining legacy code. GitHub Actions integrates with your repos, includes built-in security scanning, and every company is already moving to it.
+
+>> Choose Terraform. Works everywhere. Learn once, provision anywhere.
+
+>> Choose Python. Fast enough for 99% of DevOps work. Every AI tool runs on it.
+
+>> Choose Loki + Grafana over Datadog. Datadog will quietly destroy your budget. Loki + Grafana wins on flexibility and price — especially in Kubernetes environments.
+
+>> Learn ArgoCD or Flux. GitOps is the standard. Manual deployments are dead.
+
+>> Leave Ansible in the dumpster. Terraform + GitOps + ArgoCD handles the heavy lifting now.
+
+>> Learn DevSecOps. Security is no longer the security team's problem. Shift left. Scan your code, containers, and IaC before it hits production.
+
+Want me to add anything else?
+
+Use AI as much as you can. Learn fast. Build fast. Troubleshoot fast. The engineers treating AI as a core tool will outrun everyone else.
+
+Also learn system design, disaster recovery, and chaos engineering. Platform engineering is the evolution of DevOps.
