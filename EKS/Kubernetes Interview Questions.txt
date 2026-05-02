@@ -1,0 +1,33 @@
+Top #Kubernetes Interview Questions (3–5 Years Experience)
+
+A Pod is stuck in Pending state — how do you troubleshoot it step by step?
+A Pod is in CrashLoopBackOff — how do you identify and fix the issue?
+Application is not accessible via Service — how do you debug it?
+How do you troubleshoot DNS issues inside a Kubernetes cluster?
+How do you debug networking issues between Pods?
+A Deployment rollout failed — how do you rollback and recover?
+How do you design a highly available Kubernetes cluster?
+Nodes are going NotReady — how do you investigate and fix it?
+How do you monitor and troubleshoot resource utilization (CPU/Memory)?
+How do you handle memory leaks in a Kubernetes application?
+How do you manage resource requests and limits effectively?
+How do you troubleshoot HPA not scaling Pods correctly?
+How do you design auto-scaling for production workloads?
+How do you secure a Kubernetes cluster in production?
+How do you manage secrets securely in Kubernetes?
+How do you troubleshoot RBAC permission issues?
+How do you debug issues with ConfigMaps and environment variables?
+How do you handle persistent storage
+issues in Kubernetes?
+How do you troubleshoot volume mount failures?
+How do you design Stateful applications using StatefulSets?
+How do you implement Blue-Green or Canary deployments in Kubernetes?
+How do you debug Ingress not routing traffic correctly?
+How do you troubleshoot TLS/SSL issues in Ingress?
+How do you handle cluster upgrades without downtime?
+How do you debug kube-proxy or CNI-related issues?
+How do you monitor logs and metrics in Kubernetes?
+How do you design CI/CD pipelines for Kubernetes deployments?
+How do you handle multi-namespace or multi-tenant environments?
+How do you recover from etcd failure or cluster outage?
+How do you troubleshoot production outages in Kubernetes step by step?
