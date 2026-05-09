@@ -1,5 +1,86 @@
 # Physical Server Components and Their Functions
 
+ ┌───────────────────────────────────────────────────────────────┐
+ │                 2U Rack Mount Physical Server                │
+ ├───────────────────────────────────────────────────────────────┤
+ │                                                               │
+ │  ┌──────────────┐       ┌──────────────┐                      │
+ │  │   CPU 1      │       │   CPU 2      │                      │
+ │  │  (Compute)   │       │  (Compute)   │                      │
+ │  └──────┬───────┘       └──────┬───────┘                      │
+ │         │                      │                              │
+ │  ┌──────▼──────────────────────▼──────┐                       │
+ │  │            Motherboard             │                       │
+ │  │         System Interconnect        │                       │
+ │  └──────┬──────────────────────┬──────┘                       │
+ │         │                      │                              │
+ │  ┌──────▼───────┐      ┌──────▼───────┐                       │
+ │  │ RAM DIMMs    │      │ RAM DIMMs    │                       │
+ │  │ (Memory)     │      │ (Memory)     │                       │
+ │  └──────────────┘      └──────────────┘                       │
+ │                                                               │
+ │  ┌────────────────────────────────────────────┐               │
+ │  │              PCIe Expansion Area           │               │
+ │  │                                            │               │
+ │  │  ┌──────────────┐   ┌──────────────────┐  │               │
+ │  │  │ GPU Card     │   │ RAID Controller  │  │               │
+ │  │  │ AI/Compute   │   │ Storage Mgmt     │  │               │
+ │  │  └──────────────┘   └─────────┬────────┘  │               │
+ │  └────────────────────────────────┼───────────┘               │
+ │                                   │                           │
+ │                          ┌────────▼────────┐                  │
+ │                          │ SSD / HDD Bays  │                  │
+ │                          │ Data Storage    │                  │
+ │                          └─────────────────┘                  │
+ │                                                               │
+ │  ┌────────────────────────────────────────────┐               │
+ │  │ Network Interface Cards (NICs)             │               │
+ │  │ 10G / 25G / 100G Ethernet Ports            │────────────┐  │
+ │  └────────────────────────────────────────────┘            │  │
+ │                                                           │  │
+ │                                                   Network │  │
+ │                                                   Switch  │  │
+ │                                                           │  │
+ │  ┌────────────────────────────────────────────┐           │  │
+ │  │ BMC / iDRAC / iLO Management Module        │───────────┘  │
+ │  │ Remote Console / Monitoring / Power Mgmt   │              │
+ │  └────────────────────────────────────────────┘              │
+ │                                                               │
+ │  ┌───────────────┐       ┌───────────────┐                   │
+ │  │ PSU A         │       │ PSU B         │                   │
+ │  │ Power Supply  │       │ Redundant PSU │                   │
+ │  └──────┬────────┘       └──────┬────────┘                   │
+ │         │                       │                            │
+ │         └──────────┬────────────┘                            │
+ │                    │                                         │
+ │             ┌──────▼──────┐                                  │
+ │             │ Power Bus   │                                  │
+ │             └─────────────┘                                  │
+ │                                                               │
+ │  Cooling Fans  →  Airflow Front-to-Back                      │
+ │  [ FAN ][ FAN ][ FAN ][ FAN ][ FAN ][ FAN ]                  │
+ │                                                               │
+ └───────────────────────────────────────────────────────────────┘
+
+Typical Enterprise Connectivity Flow
+
+
+Users / Applications
+          │
+          ▼
+     Network Switch
+          │
+          ▼
+        NIC Ports
+          │
+          ▼
+     CPU + RAM Layer
+          │
+   ┌──────┴──────┐
+   ▼             ▼
+Storage       GPU Compute
+Subsystem      Acceleration
+
 Here’s a structured breakdown of the major physical components inside a server and what each one does. This is very useful for Data Center Operations, Hardware Support, Infrastructure, and Server Troubleshooting interviews.
 
 ---
