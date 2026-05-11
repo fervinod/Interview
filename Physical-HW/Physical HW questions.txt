@@ -27,7 +27,7 @@ which helps determine whether the issue is isolated to the host or related to up
 
 “I would inspect the server for any hardware fault indicators.”
 
-* Amber/red fault LEDs
+* Amber/red fault LEDs  (https://docs.oracle.com/cd/E75550_01/doc.121/e75916/glvhg.html)
 * Fan behavior
 * Motherboard diagnostic codes
 * Beep codes if available
