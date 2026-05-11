@@ -1,5 +1,0 @@
-Technical Screen
-
-In your Technical Screen interview, your interviewer will assess your performance on four focus areas:
-● Linux Systems: How do you navigate the command line? Where do you find key files? How does a kernel work and how can it break? How can you push commands out across multiple hosts? How do you assess the health of a system?
-● Hardware Troubleshooting: What are the key components to a server and how do they affect each other? How can you troubleshoot and identify component failures from the command line? What are the most important diagnostic steps to take on a crashed server without terminal access?
