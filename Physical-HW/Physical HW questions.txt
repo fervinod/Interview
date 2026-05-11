@@ -1193,4 +1193,14 @@ Disk swap	1 component	HDD/SSD	disk failure
 Node swap	1 server instance	compute node	CPU/RAM/NIC/OS issues
 Chassis swap	entire server system	full chassis	motherboard/BMC/power/system-wide faults
                                                     (Disks are reused)
+==============================================================
 
+Testing a minimal boot configuration on a physical server 
+
+involves reducing the hardware to only essential components to achieve a successful Power-On Self-Test (POST) and initial boot, which helps isolate hardware failures.
+
+Processor: Minimum one processor (do not remove the main processor).
+Memory: One DIMM (must be placed in the slot designated by the manual).
+Power: One Power Supply Unit (PSU).
+System Board: Motherboard.
+Fans: Minimum required fans
