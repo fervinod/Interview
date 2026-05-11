@@ -1139,6 +1139,12 @@ Interviewers love candidates who:
 * Mention documentation and prevention
 
 That combination is usually stronger than giving overly theoretical answers.
-
-
+============================
+Chassis swap
+Comparison Table
+Action	Scope	What is replaced	Typical cause
+Disk swap	1 component	HDD/SSD	disk failure
+Node swap	1 server instance	compute node	CPU/RAM/NIC/OS issues
+Chassis swap	entire server system	full chassis	motherboard/BMC/power/system-wide faults
+                                                    (Disks are reused)
 
