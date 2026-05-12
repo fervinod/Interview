@@ -1202,5 +1202,10 @@ involves reducing the hardware to only essential components to achieve a success
 Processor: Minimum one processor (do not remove the main processor).
 Memory: One DIMM (must be placed in the slot designated by the manual).
 Power: One Power Supply Unit (PSU).
+===========================================
+IPMI Tool commands:
+https://www.youtube.com/watch?v=T4CEqMq6BFo&t=140s
+
+
 System Board: Motherboard.
 Fans: Minimum required fans
