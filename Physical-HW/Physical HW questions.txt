@@ -1318,3 +1318,375 @@ often DDR memory chips
 sometimes soldered directly on the controller
 
 It may or may not be implemented as a removable DIMM.
+
+
+===========================================================
+
+What are the key components to a server and how do they affect each other
+
+
+A server is a collection of hardware components that work together to provide computing, storage, and networking services reliably and continuously.
+
+Here are the major server components and how they affect each other.
+
+---
+
+# Main Components of a Server
+
+| Component       | Purpose                   |
+| --------------- | ------------------------- |
+| CPU             | Processes instructions    |
+| RAM             | Temporary working memory  |
+| Storage         | Permanent data storage    |
+| Motherboard     | Connects all hardware     |
+| PSU             | Supplies electrical power |
+| Cooling system  | Removes heat              |
+| NIC             | Network connectivity      |
+| RAID controller | Manages storage arrays    |
+| BMC/iDRAC/iLO   | Remote management         |
+| Chassis         | Physical enclosure        |
+
+---
+
+# 1. CPU (Processor)
+
+Central processing unit
+
+The CPU is the “brain” of the server.
+
+Responsibilities:
+
+* Run applications
+* Process requests
+* Handle virtualization
+* Execute OS tasks
+
+Key factors:
+
+* Core count
+* Clock speed
+* Cache size
+* Architecture
+
+Effects on other components:
+
+* Faster CPUs need more cooling and power
+* More CPU cores require more RAM bandwidth
+* CPU speed affects storage and network throughput
+
+Example:
+
+* A database server with slow CPUs may bottleneck even if storage is fast.
+
+---
+
+# 2. RAM (Memory)
+
+Random-access memory
+
+RAM stores active data and running programs temporarily.
+
+Responsibilities:
+
+* Hold application data
+* Cache frequently used information
+* Support virtualization
+
+Effects:
+
+* Insufficient RAM causes swapping to disk → huge slowdown
+* Faster RAM helps CPUs perform better
+* More VMs require more RAM
+
+Relationship:
+
+```text id="o6l0s"
+CPU needs RAM constantly
+RAM feeds data to CPU
+```
+
+Example:
+
+* Powerful CPUs are wasted if RAM is too small.
+
+---
+
+# 3. Storage
+
+Solid-state drive
+Hard disk drive
+
+Storage keeps data permanently.
+
+Types:
+
+* HDD (large, slower)
+* SSD (fast)
+* NVMe (very fast)
+
+Effects:
+
+* Slow storage delays applications
+* Fast CPUs may sit idle waiting for disk reads
+* Databases heavily depend on storage speed
+
+Relationship:
+
+```text id="j8b9n"
+CPU ↔ RAM ↔ Storage
+```
+
+Storage affects:
+
+* boot time
+* database performance
+* VM performance
+* backup speed
+
+---
+
+# 4. Motherboard
+
+Motherboard
+
+The motherboard connects all hardware.
+
+Responsibilities:
+
+* Communication between components
+* Power distribution
+* Expansion slots
+* Chipset control
+
+Effects:
+
+* Determines supported CPUs/RAM
+* Limits expansion capability
+* Affects PCIe bandwidth
+
+Think of it as:
+
+> The server’s nervous system.
+
+---
+
+# 5. Power Supply Unit (PSU)
+
+Power supply unit
+
+Converts electricity into usable power.
+
+Server PSUs are usually:
+
+* redundant
+* hot-swappable
+
+Effects:
+
+* Insufficient power causes instability
+* More CPUs/disks need larger PSUs
+* Efficient PSUs reduce heat
+
+Relationship:
+
+```text id="1z47o"
+More performance → more power → more heat
+```
+
+---
+
+# 6. Cooling System
+
+Computer cooling
+
+Includes:
+
+* fans
+* heatsinks
+* airflow systems
+
+Purpose:
+
+* prevent overheating
+
+Effects:
+
+* Poor cooling reduces CPU performance
+* Overheating can shut servers down
+* Dense servers require stronger cooling
+
+Important:
+
+* Cooling and power are tightly connected.
+
+---
+
+# 7. Network Interface Card (NIC)
+
+Network interface controller
+
+Provides network connectivity.
+
+Examples:
+
+* 1GbE
+* 10GbE
+* 25GbE
+* Fibre Channel
+
+Effects:
+
+* Slow networking limits data transfer
+* Storage clusters rely heavily on NIC speed
+* Virtualization uses large network bandwidth
+
+Example:
+
+* Fast NVMe storage is wasted on a slow 1Gb network.
+
+---
+
+# 8. RAID Controller
+
+RAID controller
+
+Manages multiple disks.
+
+Functions:
+
+* redundancy
+* caching
+* performance optimization
+
+Effects:
+
+* Protects against disk failures
+* Cache improves write speed
+* Bad RAID config reduces performance
+
+Relationship:
+
+```text id="4j5ko"
+RAID controller ↔ storage drives ↔ CPU/RAM
+```
+
+---
+
+# 9. BMC / iDRAC / iLO
+
+Baseboard Management Controller
+Integrated Dell Remote Access Controller
+HPE Integrated Lights-Out
+
+Used for remote server management.
+
+Functions:
+
+* remote power control
+* hardware monitoring
+* remote console
+* firmware updates
+
+Effects:
+
+* Enables remote recovery
+* Reduces downtime
+* Critical in datacenters
+
+---
+
+# 10. Chassis
+
+Computer case
+
+The physical enclosure.
+
+Effects:
+
+* airflow quality
+* disk capacity
+* rack density
+* cooling efficiency
+
+Examples:
+
+* 1U server = dense but hotter
+* 4U server = larger cooling and expansion
+
+---
+
+# How Components Affect Each Other
+
+## Performance Chain
+
+```text id="r3k4a"
+Storage speed
+    ↓
+RAM availability
+    ↓
+CPU processing
+    ↓
+Network delivery
+```
+
+A bottleneck anywhere slows the whole server.
+
+---
+
+# Example Scenarios
+
+## Scenario 1 — Too Little RAM
+
+Strong CPU + fast SSD + low RAM:
+
+* system swaps to disk
+* applications slow dramatically
+
+RAM becomes bottleneck.
+
+---
+
+## Scenario 2 — Slow Storage
+
+Many CPUs + huge RAM + HDDs:
+
+* CPU waits for storage I/O
+* database becomes slow
+
+Storage becomes bottleneck.
+
+---
+
+## Scenario 3 — Poor Cooling
+
+High-end CPUs + inadequate airflow:
+
+* thermal throttling
+* reduced CPU speed
+* instability
+
+Cooling limits performance.
+
+---
+
+# Simplified Analogy
+
+| Server Part | Human Body Analogy     |
+| ----------- | ---------------------- |
+| CPU         | Brain                  |
+| RAM         | Short-term memory      |
+| Storage     | Long-term memory       |
+| Motherboard | Nervous system         |
+| PSU         | Heart/power source     |
+| Cooling     | Sweat/cooling system   |
+| NIC         | Communication system   |
+| RAID        | Data protection system |
+
+---
+
+# Most Important Principle
+
+A server is only as strong as its weakest bottleneck.
+
+Balanced design matters more than one extremely powerful component.
+
