@@ -1242,3 +1242,40 @@ Key point:
 IPMI is the standard language/protocol.
 
 It is generally simpler and less user-friendly than vendor platforms.
+
+===================================
+
+what is the purpose of cache battery
+
+A cache battery is used to protect data stored in a RAID controller’s cache memory during a power failure.
+
+Most commonly, it is attached to a:
+
+RAID controller
+Storage controller
+Write cache module
+
+FLOW:
+Application
+   ↓
+RAID Cache (fast RAM)
+   ↓
+Disk drives
+
+If power fails:
+Battery keeps cache alive
+OR
+supercapacitor copies cache to flash
+
+Purpose of the Cache Battery
+
+The battery keeps the cache memory powered long enough to preserve unwritten data.
+
+When power returns:
+
+RAID controller restores cached data
+Pending writes are flushed safely to disk
+
+So the main purpose is:
+
+Prevent data loss during power failure while allowing high-performance write-back caching.
