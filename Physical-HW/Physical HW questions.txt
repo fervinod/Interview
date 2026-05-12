@@ -1279,3 +1279,42 @@ Pending writes are flushed safely to disk
 So the main purpose is:
 
 Prevent data loss during power failure while allowing high-performance write-back caching.
+
+========================================
+DIMM and “fast RAM”
+
+A DIMM and “fast RAM” are related, but they are not the same thing
+
+DIMM stands for:
+
+Dual In-line Memory Module
+
+It is the physical memory stick/module plugged into the motherboard.
+
+RAM
+
+Random-access memory
+
+RAM means:
+
+Random Access Memory
+
+It is the actual memory technology used for temporary data storage.
+
+RAM can exist:
+
+on DIMMs
+inside CPUs (cache)
+inside RAID controllers
+on GPUs
+embedded on boards
+
+Fast RAM” in RAID Controllers
+
+When talking about RAID cache battery, “fast RAM” usually means:
+
+cache memory on the RAID controller
+often DDR memory chips
+sometimes soldered directly on the controller
+
+It may or may not be implemented as a removable DIMM.
