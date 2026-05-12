@@ -1690,3 +1690,412 @@ A server is only as strong as its weakest bottleneck.
 
 Balanced design matters more than one extremely powerful component.
 
+====================================================================================================================
+
+i am booting a server using pxe, the network is fine but the host is not booting?  describe the troubleshooting steps
+
+When a server fails to boot via **PXE** (Preboot Execution Environment), even though “the network is fine,” the issue is usually in one of these areas:
+
+1. BIOS/UEFI settings
+2. DHCP
+3. TFTP
+4. Boot file configuration
+5. Network path/VLAN
+6. Secure Boot / architecture mismatch
+7. PXE server configuration
+
+Here’s a structured troubleshooting approach used in datacenters.
+
+---
+
+# PXE Boot Flow
+
+Understanding the sequence helps isolate failures.
+
+```text id="6vsm4j"
+Client powers on
+    ↓
+PXE firmware starts
+    ↓
+DHCP request sent
+    ↓
+DHCP provides:
+    - IP address
+    - PXE boot server
+    - Boot filename
+    ↓
+Client contacts TFTP/HTTP server
+    ↓
+Downloads bootloader
+    ↓
+Loads OS installer/image
+```
+
+---
+
+# Step 1 — Verify BIOS / UEFI Settings
+
+Check:
+
+* PXE boot enabled
+* Correct NIC selected
+* Boot order
+* Legacy BIOS vs UEFI mode
+
+Common issue:
+
+* PXE server provides Legacy boot image
+* Host configured for UEFI only
+
+Or vice versa.
+
+---
+
+# Step 2 — Confirm Link and NIC Detection
+
+From switch side:
+
+* port up?
+* correct VLAN?
+* no port-security violation?
+
+Check:
+
+* link LEDs
+* switch MAC learning
+* NIC firmware issues
+
+Useful commands (switch dependent):
+
+```bash id="whh2np"
+show mac address-table
+show interface status
+```
+
+---
+
+# Step 3 — Verify DHCP Response
+
+PXE requires DHCP options.
+
+Critical DHCP options:
+
+| Option | Purpose             |
+| ------ | ------------------- |
+| 66     | Boot server         |
+| 67     | Boot filename       |
+| 93     | Client architecture |
+
+Symptoms:
+
+* Gets IP but no boot file
+* “PXE-E53: No boot filename received”
+
+Use packet capture:
+
+```bash id="6tij95"
+tcpdump -i eth0 port 67 or port 68
+```
+
+Check:
+
+* client receives OFFER
+* correct next-server
+* correct filename
+
+---
+
+# Step 4 — Verify TFTP Server
+
+Most PXE environments use TFTP initially.
+
+Common errors:
+
+| Error          | Meaning             |
+| -------------- | ------------------- |
+| PXE-E32        | TFTP open timeout   |
+| PXE-E3B        | TFTP error          |
+| File not found | wrong boot filename |
+
+Test manually:
+
+```bash id="l53eeh"
+tftp <server-ip>
+get pxelinux.0
+```
+
+Verify:
+
+* TFTP service running
+* firewall allows UDP 69
+* boot file exists
+* permissions correct
+
+---
+
+# Step 5 — Verify Boot Files
+
+Typical files:
+
+* `pxelinux.0`
+* `bootx64.efi`
+* `grubx64.efi`
+* kernel/initrd
+
+Check:
+
+* correct path
+* architecture match
+* UEFI vs BIOS compatibility
+
+Example issue:
+
+```text id="0f8b07"
+UEFI client trying to load pxelinux.0
+```
+
+That usually fails because:
+
+* `pxelinux.0` is legacy BIOS loader.
+
+UEFI systems often need:
+
+```text id="w3r0c5"
+grubx64.efi
+bootx64.efi
+```
+
+---
+
+# Step 6 — Verify Architecture Compatibility
+
+Different systems require different loaders.
+
+| Client Type | Typical Boot File |
+| ----------- | ----------------- |
+| Legacy BIOS | pxelinux.0        |
+| UEFI x64    | bootx64.efi       |
+| ARM         | arm64 EFI loader  |
+
+Mismatch causes silent failures.
+
+---
+
+# Step 7 — Check Secure Boot
+
+Secure Boot may block unsigned PXE loaders.
+
+Symptoms:
+
+* PXE starts
+* bootloader downloads
+* then immediately fails
+
+Try:
+
+* temporarily disable Secure Boot
+* use signed bootloaders
+
+---
+
+# Step 8 — Verify PXE Server Logs
+
+Check:
+
+* DHCP logs
+* TFTP logs
+* HTTP logs (if iPXE)
+
+Examples:
+
+```bash id="rlzvch"
+journalctl -u dhcpd
+journalctl -u tftpd
+```
+
+Or:
+
+```bash id="3sz8k3"
+tail -f /var/log/messages
+```
+
+Look for:
+
+* requests reaching server
+* filename errors
+* permission issues
+
+---
+
+# Step 9 — Test with Another Host
+
+Important isolation step.
+
+If another server PXE boots successfully:
+
+* issue likely host-specific
+
+Possible causes:
+
+* firmware bug
+* NIC PXE ROM issue
+* BIOS settings
+* VLAN mismatch
+
+---
+
+# Step 10 — Verify VLAN / Relay Configuration
+
+In enterprise networks:
+
+* DHCP may be on another subnet
+
+Requires:
+
+```text id="8ng4qe"
+ip helper-address
+```
+
+on switches/routers.
+
+Without relay:
+
+* DHCP broadcast never reaches PXE server.
+
+---
+
+# Step 11 — Check MTU / Jumbo Frames
+
+Rare but possible.
+
+Symptoms:
+
+* partial downloads
+* random PXE hangs
+
+Test standard MTU:
+
+```text id="w8vv1e"
+1500
+```
+
+---
+
+# Step 12 — Validate Boot Image
+
+Sometimes:
+
+* PXE works
+* kernel loads
+* installer hangs
+
+Possible causes:
+
+* corrupted initrd
+* inaccessible repository
+* wrong kickstart/preseed config
+
+---
+
+# Common PXE Errors
+
+| Error             | Likely Cause          |
+| ----------------- | --------------------- |
+| PXE-E51           | No DHCP response      |
+| PXE-E53           | Missing boot filename |
+| PXE-E32           | TFTP timeout          |
+| PXE-M0F           | No bootable device    |
+| TFTP open timeout | firewall/TFTP issue   |
+
+---
+
+# Fast Isolation Strategy
+
+## If NO IP address:
+
+Focus on:
+
+* DHCP
+* VLAN
+* switch
+
+## If IP but no boot file:
+
+Focus on:
+
+* DHCP options 66/67
+
+## If boot file download fails:
+
+Focus on:
+
+* TFTP
+* firewall
+* permissions
+
+## If bootloader starts but OS fails:
+
+Focus on:
+
+* kernel/initrd
+* UEFI/BIOS mismatch
+* Secure Boot
+
+---
+
+# Real-World Most Common Causes
+
+In production, the most frequent issues are:
+
+1. Wrong UEFI/Legacy boot mode
+2. Missing DHCP option 67
+3. TFTP blocked by firewall
+4. Wrong VLAN
+5. Secure Boot incompatibility
+6. Incorrect boot filename
+7. Bad iPXE script/config
+
+---
+
+# Example End-to-End Validation
+
+## On DHCP server
+
+Verify:
+
+```text id="8iwjpr"
+next-server 10.10.10.5;
+filename "bootx64.efi";
+```
+
+## On TFTP server
+
+Verify file exists:
+
+```bash id="mbrz9w"
+ls /var/lib/tftpboot/bootx64.efi
+```
+
+## On client
+
+Verify:
+
+* UEFI mode
+* PXE enabled
+* correct NIC first in boot order
+
+---
+
+# Best Practice Troubleshooting Order
+
+```text id="7nqzc0"
+1. BIOS/UEFI
+2. Link/VLAN
+3. DHCP
+4. TFTP
+5. Boot file
+6. Secure Boot
+7. OS image
+```
+
+This sequence minimizes wasted troubleshooting time.
