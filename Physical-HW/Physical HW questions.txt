@@ -1192,6 +1192,10 @@ Action	Scope	What is replaced	Typical cause
 Disk swap	1 component	HDD/SSD	disk failure
 Node swap	1 server instance	compute node	CPU/RAM/NIC/OS issues
 Chassis swap	entire server system	full chassis	motherboard/BMC/power/system-wide faults
+
+System Board: Motherboard.
+Fans: Minimum required fans
+
                                                     (Disks are reused)
 ==============================================================
 
@@ -1205,7 +1209,36 @@ Power: One Power Supply Unit (PSU).
 ===========================================
 IPMI Tool commands:
 https://www.youtube.com/watch?v=T4CEqMq6BFo&t=140s
+=====================================================
+| Technology  | Type                       | Vendor            | What It Does                                    |
+| ----------- | -------------------------- | ----------------- | ----------------------------------------------- |
+| **IPMI**    | Open standard/protocol     | Industry standard | Basic remote hardware management                |
+| **iDRAC**   | Remote management platform | Dell              | Advanced remote management for Dell servers     |
+| **iLO**     | Remote management platform | HPE               | Advanced remote management for HPE servers      |
+| **Console** | Access interface           | Generic           | The actual screen/session to control the server |
 
 
-System Board: Motherboard.
-Fans: Minimum required fans
+
+
+1. IPMI
+
+Intelligent Platform Management Interface
+
+IPMI is a standardized protocol for out-of-band server management.
+
+It works through a dedicated controller called a BMC (Baseboard Management Controller).
+
+Features usually include:
+
+Power on/off/reboot
+Hardware monitoring
+Sensor readings
+Event logs
+Basic remote console
+Serial-over-LAN
+
+Key point:
+
+IPMI is the standard language/protocol.
+
+It is generally simpler and less user-friendly than vendor platforms.
