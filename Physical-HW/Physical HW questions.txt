@@ -2099,3 +2099,13 @@ Verify:
 ```
 
 This sequence minimizes wasted troubleshooting time.
+==================================================================
+
+
+Booting from the network with PXE 
+
+https://www.youtube.com/watch?v=zQ-TQhmjhuc
+
+ Pxe Boot Server Setup on RHEL 7 | Kicktstart Server on RHEL 7 | Pxe Server Configure Step by Step 
+ 
+ https://www.youtube.com/watch?v=eeYMMi5Hvg4
