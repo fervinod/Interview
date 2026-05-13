@@ -1,0 +1,116 @@
+ RSS vs VSZ
+ These are memory usage metrics shown by commands like:
+
+ps aux
+top
+
+RSS — Resident Set Size
+
+Resident Set Size
+
+RSS is the actual physical RAM currently used by a process
+
+
+It includes:
+
+loaded program code
+stack
+heap
+shared libraries currently in RAM
+
+Does NOT include:
+
+swapped-out memory
+memory not currently resident in RAM
+
+
+VSZ — Virtual Memory Size
+
+Virtual Memory Size
+
+VSZ is the total virtual memory allocated to a process.
+
+It includes:
+
+RAM used
+swapped memory
+mapped files
+shared libraries
+reserved but unused memory
+
+In TOP output command :
+
+| Column | Meaning       |
+| ------ | ------------- |
+| VIRT   | VSZ           |
+| RES    | RSS           |
+| SHR    | Shared memory |
+
+
+ps -eo pid,cmd,vsz,rss --sort=-rss | head
+
+Memory Leak Clue
+
+Possible leak pattern:
+
+Metric	Behavior
+RSS	Continuously increases
+VSZ	May also increase
+
+Growing RSS over time is more concerning.
+
+==========================================
+https://askubuntu.com/questions/1469990/what-is-mtu-on-a-network-adapter-and-what-problems-can-wrong-mtu-cause
+
+
+
+MTU, or Max Transmission Unit, is the maximum payload that can be transmitted over a interface. The payload includes any L3 headers, such as TCP/IP, but excludes layer 2 headers, such as the Ethernet frame header.
+==========================================
+1. Reserved Ports
+
+Reserved Ports
+
+Reserved ports are low-numbered ports reserved for system or privileged services.
+Examples:
+
+Port	Service
+22	SSH
+25	SMTP
+
+2. Ephemeral Ports
+
+Ephemeral Ports
+
+Ephemeral ports are temporary ports automatically assigned by the kernel for outbound client connections.
+
+Check Listening Ports
+ss -tulnp
+
+Check Active Connections
+ss -tan
+
+Feature	Reserved Ports	Ephemeral Ports
+Port Range	0–1023	   Usually 32768–609
+
+netstat -tan 2>/dev/null | \
+awk 'NR>2 {print $6}' | \
+sort | uniq -c | sort -rn
+
+echo
+echo "[ Top Remote Connections ]"
+
+netstat -tan 2>/dev/null | \
+awk 'NR>2 {print $5}' | \
+cut -d: -f1 | \
+sort | uniq -c | sort -rn | head
+
+================================================
+SIGTERM`, `SIGKILL`, `SIGHUP
+
+
+Quick Comparison
+Signal	Number	Behavior	Can be ignored?
+SIGTERM	15	Graceful stop	Yes
+SIGKILL	9	Force stop	No
+SIGHUP	1	Reload or restart	Yes
+
