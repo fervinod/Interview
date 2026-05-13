@@ -2109,3 +2109,30 @@ https://www.youtube.com/watch?v=zQ-TQhmjhuc
  Pxe Boot Server Setup on RHEL 7 | Kicktstart Server on RHEL 7 | Pxe Server Configure Step by Step 
  
  https://www.youtube.com/watch?v=eeYMMi5Hvg4
+=====================================
+Important PXE Services
+
+Typical PXE infrastructure:
+
+Service	Purpose
+DHCP	IP assignment
+TFTP	Boot files
+HTTP/NFS	OS repository
+DNS	Optional hostname resolution
+
+Common PXE Boot Files
+File	Purpose
+pxelinux.0	BIOS bootloader
+grubx64.efi	UEFI bootloader
+vmlinuz	Linux kernel
+initrd.img	Initial RAM disk
+
+In a Preboot Execution Environment environment, several DHCP options are critical for successful PXE booting.
+
+Critical DHCP Options for PXE Boot
+DHCP Option	Purpose
+Option 66	TFTP server name / boot server
+Option 67	Boot filename
+Option 60	PXE client identification
+Option 43	Vendor-specific PXE info
+Option 150	Alternate TFTP server (Cisco environments)
