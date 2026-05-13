@@ -114,3 +114,173 @@ SIGTERM	15	Graceful stop	Yes
 SIGKILL	9	Force stop	No
 SIGHUP	1	Reload or restart	Yes
 
+=========================
+. How would you diagnose memory leaks?
+
+What indicates a leak:
+Used memory keeps increasing steadily
+Cache does NOT explain the growth
+Swap usage starts increasing
+
+
+11. Differentiate leak vs normal usage
+Pattern	Meaning
+RSS increases steadily forever	Memory leak
+RSS grows then stabilizes	Normal behavior
+Cache increases but MemAvailable stable	Not a leak
+Swap increases + RSS grows	Severe issue
+
+12. Common causes of memory leaks
+Unreleased heap memory (C/C++)
+Java heap misconfiguration
+Too many open connections
+File descriptor leaks
+Cache not bounded
+Kernel driver leaks (rare)
+
+Summary
+
+To diagnose memory leaks:
+
+Monitor memory trend (free, vmstat)
+Identify growing process (top, ps)
+Track RSS over time (/proc, watch)
+Use profiling tools (valgrind, jmap, smem)
+Check kernel logs (dmesg, journalctl)
+Confirm sustained growth = leak
+
+==========================================
+
+* process lifecycle
+* parent/child processes
+* zombies vs orphans
+* signals (`SIGTERM`, `SIGKILL`, `SIGHUP`)
+* process states
+* threads vs processes
+* context switching
+* CPU scheduling
+* load average
+ virtual memory
+ RAID
+ * TCP handshake
+* DNS resolution
+* latency
+Typical questions:
+
+* “Website is slow. Walk me through debugging.”
+* “Difference between TCP and UDP?”
+* “Why can ping work while HTTP fails?”
+* “How would you debug intermittent packet loss?”
+
+You’ll often get scenarios like:
+
+* CPU spike
+* network latency
+* disk bottleneck
+* hanging services
+* memory exhaustion
+
+Expected mindset:
+
+1. narrow scope
+2. identify bottleneck
+3. verify assumptions
+4. isolate root cause
+5. discuss mitigation
+
+* recursive vs authoritative
+* TTL
+* caching
+* common failure modes
+
+
+18. Difference between buffered and cached memory?
+
+19. What is virtual memory?
+
+
+20;how do you investigate server crash
+A server crash can mean different things:
+
+System rebooted unexpectedly
+Kernel panic
+System froze (no SSH access)
+OOM kill caused critical service failure
+Hardware failure
+
+2. Check last boot and reboot reason
+who -b
+last reboot
+journalctl --list-boots
+View previous boot:
+journalctl -b -1
+
+
+3. Check kernel crash / panic logs
+
+dmesg -T | less
+
+Look for:
+
+panic
+BUG
+segfault
+OOM
+soft lockup
+
+journalctl -k -b -1
+
+14. Common root causes of server crash
+Cause	Symptom
+OOM Killer	process killed, system unstable
+Disk failure	I/O errors, freeze
+Kernel panic	system reboot
+CPU overload	system hang
+Memory leak	gradual slowdown
+Filesystem full	services fail
+Hardware issue	random reboot
+
+To investigate a server crash:
+
+Confirm reboot time (last reboot)
+Analyze previous boot logs (journalctl -b -1)
+Check kernel messages (dmesg)
+Look for OOM kills
+Check disk and hardware errors
+Validate memory/CPU pressure
+Review service logs
+Check crash dumps (kdump)
+=========================
+Virtual memory is:
+
+a logical memory layer
+created by the OS kernel
+that gives each process its own memory space
+independent of physical RAM
+
+Virtual memory is a memory management system where each process gets its own “private view” of memory,
+instead of directly using physical RAM.
+
+ps aux --sort=-vsz
+
+cat /proc/<PID>/maps
+
+================================
+To debug a slow website:
+When a website is slow, you debug it like a pipeline problem: user → network → server → app → database → storage. You isolate where the delay is coming from step by step.
+Ask/observe:
+
+Is it slow for all users or some users?
+Is it slow for all pages or specific endpoints?
+Is it slow response or timeout?
+
+
+Check external response timing (curl -w)
+Check CPU/memory/load
+Check disk I/O
+Check network connections
+Check web server logs
+Check application behavior
+Check database performance
+Check DNS and network path dig your-site.com
+Check port exhaustion / TIME_WAIT
