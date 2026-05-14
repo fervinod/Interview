@@ -284,3 +284,108 @@ Check application behavior
 Check database performance
 Check DNS and network path dig your-site.com
 Check port exhaustion / TIME_WAIT
+
+=====================
+TCP and UDP : 
+TCP (Transmission Control Protocol) is a reliable, connection-oriented protocol that ensures data packets arrive in order and without errors, making it ideal for file transfers and web browsing. UDP (User Datagram Protocol) is a faster, connectionless protocol that sacrifices reliability for speed, making it better for real-time video streaming, VoIP, and gaming
+
+Key Differences Between TCP and UDP:
+
+Reliability: TCP guarantees delivery by acknowledging packets and retransmitting lost data.If a segment is lost or corrupted (detected using the checksum), the receiver discards it, and the sender retransmits.
+ UDP does not acknowledge receipt or retransmit lost packets.
+
+Connection: TCP requires a 3-way handshake to establish a connection before sending data. UDP is connectionless and sends data immediately.
+
+Speed: UDP is generally faster due to lower overhead and no requirement for acknowledgment.
+
+Ordering: TCP ensures packets are reassembled in the correct order, whereas UDP packets can arrive in any order.Use Cases: Use TCP for email (SMTP), web browsing (HTTP), and file transfers (FTP). Use UDP for live video streaming, voice over IP (VoIP), and online gaming
+
+======================================================
+TCP 3-Way Handshake Process
+
+https://www.geeksforgeeks.org/computer-networks/tcp-3-way-handshake-process/
+
+
+Step 1 (SYN): In the first step, the client wants to establish a connection with a server, so it sends a segment with SYN(Synchronize Sequence Number) which informs the server that the client is likely to start communication and with what sequence number it starts segments with
+Step 2 (SYN + ACK): Server responds to the client request with SYN-ACK signal bits set. Acknowledgement(ACK) signifies the response of the segment it received and SYN signifies with what sequence number it is likely to start the segments with
+
+Step 3 (ACK): In the final part client acknowledges the response of the server and they both establish a reliable connection with which they will start the actual data transfer. 
+
+===========================================
+
+| Command      | Why it’s used                                | Example with 3 common options                                     |
+| ------------ | -------------------------------------------- | ----------------------------------------------------------------- |
+| `tcpdump`    | Capture and inspect network packets          | `bash id="dff7n9"\ntcpdump -i eth0 -n -c 100\n`                   |
+|              |                                              | `-i` interface, `-n` no DNS lookup, `-c` packet count             |
+| `netstat`    | View network connections and listening ports | `bash id="dgx4ep"\nnetstat -tulnp\n`                              |
+|              |                                              | `-t` TCP, `-u` UDP, `-l` listening, `-n` numeric, `-p` process    |
+| `ss`         | Faster modern replacement for `netstat`      | `bash id="v8h8od"\nss -tulnp\n`                                   |
+|              |                                              | `-t` TCP, `-u` UDP, `-l` listening, `-p` process                  |
+| `traceroute` | Show network path packets take to a host     | `bash id="4v8c9j"\ntraceroute -n -m 10 google.com\n`              |
+|              |                                              | `-n` no DNS resolution, `-m` max hops, hostname target            |
+| `dig`        | Query DNS records                            | `bash id="eqpxlt"\ndig +short google.com A\n`                     |
+|              |                                              | `+short` compact output, `A` record type, domain name             |
+| `curl`       | Make HTTP/API requests and test endpoints    | `bash id="6x4u3q"\ncurl -I -v -o /dev/null https://example.com\n` |
+|              |                                              | `-I` headers only, `-v` verbose, `-o` output file                 |
+| `ping`       | Test connectivity and latency                | `bash id="5qcf3m"\nping -c 4 -i 1 google.com\n`                   |
+|              |                                              | `-c` packet count, `-i` interval, hostname target                 |
+
+
+============================================================
+
+Time to First Byte (TTFB) is a foundational web performance metric that measures the time between a browser requesting a page and receiving the very first byte of information from the server. It serves as an indicator of web server responsiveness and network latency, significantly impacting SEO and user experience
+
+Key Aspects of TTFB:What it Measures: The sum of HTTP redirect time, Service Worker startup time, DNS lookup, connection/TLS negotiation, and server processing time.Optimal Values: A good TTFB is under 800ms, although 600ms is often recommended for faster performance, and ideally, under 300ms.Why it Matters: A slow TTFB delays all subsequent loading metrics, including First Contentful Paint (FCP) and Largest Contentful Paint (LCP).How to Improve:Implement Caching: Reduce server processing time by caching content at the server or edge level.Use a CDN: Deliver content from a location closer to the user to reduce network latency.Optimize Backend Code: Optimize database queries and server-side scripts.Use 103 Early Hints: Send essential resources to the browser while the server prepares the final HTML
+
+=================================
+ssh connection ;
+https://info.support.huawei.com/info-finder/encyclopedia/en/SSH.html
+
+========================================
+buffer cache : 
+Buffers and caches both temporarily store data in high-speed memory (RAM), but for different purposes: buffers bridge speed differences during input/output (I/O) operations (e.g., streaming video), while caches store copies of frequently accessed data to speed up future requests (e.g., CPU caching). Buffers hold data for one-time use; caches enable multiple reuses
+
+=============================
+process states : 
+https://www.geeksforgeeks.org/operating-systems/states-of-a-process-in-operating-systems/
+
+===================================
+zombie and orphan processes:
+
+Zombie ProcessesDefinition: Finished execution (exit()) but still exists in the process table.Cause: Parent did not call wait() after the child terminated.State: Dead but un-reaped.Cleanup: Parent must call wait() to remove it.Killing: Cannot be killed with kill -9
+To list zombie processes in Linux, look for processes marked with the Z state or the <defunct> tag in the process lis
+ps -eo pid,ppid,state,cmd | awk '$3=="Z"'
+
+
+
+Orphan ProcessesDefinition: Child process still running, but the parent process has terminated.Cause: Parent terminates first, leaving the child unattended.State: Alive and running.Cleanup: Adopted by the init process (PID 1), which reaps it when it dies.Killing: Can be terminated naturally
+ps -ef | awk '$3 == 1 { print $0 }'
+ps -eo pid,ppid,cmd | awk '$2 == 1 { print $0 }'
+
+Key DifferencesRunning Status: Zombie processes are dead; Orphan processes are alive.
+Parent Status: Zombie has a living, negligent parent; Orphan has a dead parent.
+Resource Usage: Zombies consume no resources except for a slot in the process table; Orphans continue using memory and CPU
+
+=================================================================
+  CLOSE_WAIT  TIME_WAIT
+  
+  
+Due to the way TCP/IP works, connections can not be closed immediately. Packets may arrive out of order or be retransmitted after the connection has been closed.
+
+    CLOSE_WAIT indicates that the remote endpoint (other side of the connection) has closed the connection.
+    TIME_WAIT indicates that local endpoint (this side) has closed the connection.
+
+The connection is being kept around so that any delayed packets can be matched to the connection and handled appropriately. The connections will be removed when they time out within four minutes. See http://en.wikipedia.org/wiki/Transmission_Control_Protocol for more details.
+
+=====================================
+
+RAID 0 1 5 10
+
+https://www.youtube.com/watch?v=U-OCdTeZLac&t=54s
+
+| RAID Level | Simple Definition                 | Key Idea                        |
+| ---------- | --------------------------------- | ------------------------------- |
+| `RAID 0`   | Data split across disks for speed | Fast, no redundancy             |
+| `RAID 1`   | Data mirrored to another disk     | Redundancy via duplication      |
+| `RAID 5`   | Data + parity spread across disks | Fault tolerance with efficiency |
+| `RAID 10`  | Mirrored pairs striped together   | Speed + redundancy              |
