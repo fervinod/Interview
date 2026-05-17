@@ -1,0 +1,63 @@
+UNIVERSAL HW COMMANDS:
+
+IPMITOOL.
+smartscl
+
+
+for NVME drives;
+
+for gpu
+
+HPE :
+
+NOTE:
+
+ssacli fully works with Gen10 servers, but hpasmcli does not.Starting with Gen10 architecture,
+HPE changed how system health information is communicated, directly affecting these utilities.
+
+ssacli (Smart Storage Administrator CLI): Manages storage controllers, hard drives (HDDs/SSDs), RAID arrays, and logical volumes.
+
+#ssacli monitors: Physical disks, RAID controller cache, battery backup units (Smart Storage Battery), logic drives, and encryption settings.
+
+hpasmcli (HP Management CLI): Manages physical server chassis components, environmental status, and system architecture logs.
+#hpasmcli monitors: Cooling fans, temperature sensors, power supplies, CPU/DIMM slots, and the Integrated Management Log (IML).
+
+#instead of hpasmcli on Gen10 Use ilorest (The modern CLI replacement):
+
+
+ILOREST:
+The HPE RESTful Interface Tool (ilorest) utilizes the Redfish API to interact directly with the iLO controller. It can be run locally inside the host operating system using the chifublob driver wrapper, or executed remotely over a network by defining login flags (--url, -u, -p)
+
+
+ilorest serverinfo --type=Chassis: Outputs structural details on real-time server conditions, fan metrics, power redundancy status, and thermal arrays.
+
+ilorest serverinfo --type=System: Displays high-level specifications including current memory capacity, CPU core types, and model serial identifiers.
+
+ilorest systemlogs --selectlog=IML: Pulls the raw content logs from the integrated Integrated Management Log (IML) for hardware fault tracking
+
+ilorest serverinfo --memory 
+ilorest serverinfo --ethernet
+#ilorest serverinfo --processor
+Processor 1:
+    Model: Intel(R) Xeon(R) Gold 6230 CPU @ 2.10GHz
+    Step: 7
+    Socket: Proc 1
+    Max Speed: 3900 MHz
+    Speed: 2100 MHz
+    Cores: 20
+    Threads: 40
+    L1-Cache: 1280 KB
+    L2-Cache: 20480 KB
+    L3-Cache: 28160 KB
+    Health: OK
+
+===========================================================
+
+hpasmcli
+
+echo "=== CHASSIS HEALTH (CPU, RAM, Power) ===" && \
+#sudo hpasmcli -s "SHOW CPU; SHOW DIMM; SHOW POWERSUPPLY" && \
+
+===============================================
+ssacli
+ssacli ctrl all show status: Checks the health of the hardware RAID Controller, cache module, and backup battery.ssacli ctrl slot=0 pd all show status: Checks the health of every physical Hard Drive or SSD.--processor / SHOW CPU: Displays processor socket health and internal frequency status.--memory / SHOW DIMM: Checks slot presence and tracks bad ECC hardware memory modules.--type=Chassis / SHOW POWERSUPPLY: Verifies if power supplies are active and running with full redundancy.
