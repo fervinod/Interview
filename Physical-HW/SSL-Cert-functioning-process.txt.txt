@@ -1,0 +1,281 @@
+https://aws.amazon.com/what-is/ssl-certificate/
+
+When you visit a secure website like:
+
+```text id="wafn4q"
+https://example.com
+```
+
+your browser and the website perform a process to:
+
+1. Prove the website is real
+2. Create an encrypted connection
+3. Prevent others from reading or changing data
+
+The SSL/TLS certificate is the website’s “digital ID card.”
+
+---
+
+# Simple analogy
+
+Imagine:
+
+* You = the internet
+* Website = a bank
+* SSL certificate = official government ID
+* Encryption = secret language only you and the bank understand
+
+Before sharing passwords or credit cards, your browser asks:
+
+```text id="q87hjk"
+"Prove you're really the bank."
+```
+
+The website shows its SSL certificate.
+
+Your browser checks:
+
+* Is this certificate valid?
+* Was it issued by a trusted authority?
+* Does it match the website name?
+
+If yes:
+
+* Browser trusts the site
+* Creates an encrypted connection
+* Shows the padlock icon
+
+---
+
+# Step-by-step flow
+
+## 1. You type the website
+
+Example:
+
+```text id="ww1ls3"
+https://google.com
+```
+
+Browser connects to the server.
+
+---
+
+## 2. Server sends its SSL certificate
+
+The certificate contains:
+
+* Website name
+* Public encryption key
+* Expiration date
+* Issuing authority
+
+Example:
+
+```text id="d2xn0g"
+This certificate belongs to google.com
+Issued by DigiCert
+Valid until Jan 2027
+```
+
+---
+
+## 3. Browser verifies the certificate
+
+Your browser checks:
+
+* Is the certificate expired?
+* Is it signed by a trusted CA?
+* Does it match the domain?
+* Has it been revoked?
+
+Trusted certificate authorities include organizations like:
+
+* DigiCert
+* Let's Encrypt
+* Sectigo
+
+Browsers already trust these authorities.
+
+---
+
+# Why browsers trust them
+
+Operating systems and browsers contain a built-in list of trusted certificate authorities.
+
+Think of it like:
+
+```text id="ezq1b0"
+"These are approved ID issuers."
+```
+
+If the certificate is signed by one of them, the browser accepts it.
+
+---
+
+# 4. Encryption keys are exchanged
+
+Now the browser and server create a shared secret encryption key.
+
+Important:
+
+* The public key from the certificate is public
+* The private key stays only on the server
+
+The browser uses the public key to safely establish encryption.
+
+After this step:
+
+```text id="n0ttg4"
+All traffic becomes encrypted
+```
+
+Including:
+
+* Passwords
+* Cookies
+* Credit cards
+* API data
+
+---
+
+# 5. Secure communication begins
+
+Now:
+
+```text id="m4e5mi"
+Browser ↔ encrypted traffic ↔ website
+```
+
+Anyone intercepting traffic sees unreadable encrypted data.
+
+---
+
+# What happens without SSL/TLS
+
+Without HTTPS:
+
+* Data travels as plain text
+* Attackers on Wi-Fi can read it
+* Passwords can be stolen
+* Traffic can be modified
+
+That’s why browsers mark HTTP sites as:
+
+```text id="7b1ndg"
+Not Secure
+```
+
+---
+
+# What the certificate actually does
+
+The certificate itself does NOT encrypt traffic directly.
+
+Its job is mainly:
+
+1. Prove identity
+2. Deliver the public key safely
+
+TLS encryption happens after trust is established.
+
+---
+
+# Public key vs private key
+
+## Public key
+
+* Shared openly in the certificate
+* Used to establish secure communication
+
+## Private key
+
+* Secret
+* Stored on the web server
+* Used to decrypt/authenticate
+
+If the private key leaks:
+
+```text id="jlwmzy"
+Attackers can impersonate the website
+```
+
+---
+
+# Why expired certificates cause warnings
+
+If a certificate:
+
+* Expired
+* Doesn’t match the domain
+* Is self-signed
+* Is revoked
+
+the browser shows:
+
+```text id="rj8icr"
+Your connection is not private
+```
+
+because it can’t safely trust the site identity.
+
+---
+
+# What TLS handshake means
+
+The initial setup process is called the TLS handshake.
+
+Simplified:
+
+```text id="b8r6uj"
+Client: Who are you?
+Server: Here's my certificate
+Client: I trust you
+Both: Let's create encryption keys
+```
+
+Then secure communication starts.
+
+---
+
+# Modern HTTPS stack
+
+Typical flow:
+
+```text
+Browser
+  ↓
+DNS
+  ↓
+CDN / Load Balancer
+  ↓
+TLS Handshake
+  ↓
+Encrypted HTTP traffic
+  ↓
+Web server / app
+```
+
+---
+
+# Common operational SSL tasks
+
+Ops teams often handle:
+
+* Renewing certificates
+* Configuring HTTPS
+* Managing TLS versions
+* Installing certs on load balancers/CDNs
+* Fixing expiration outages
+
+Common tools:
+
+* [Certbot](https://certbot.eff.org?utm_source=chatgpt.com)
+* [OpenSSL](https://www.openssl.org?utm_source=chatgpt.com)
+* [Let's Encrypt](https://letsencrypt.org?utm_source=chatgpt.com)
+
+---
+
+# In one sentence
+
+SSL/TLS certificates let your browser verify a website’s identity and securely create encrypted communication over the internet.

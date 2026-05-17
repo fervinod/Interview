@@ -1,0 +1,414 @@
+Network latency troubleshooting is about finding **where delay is introduced** between two systems.
+
+A simple way to think about it:
+
+```text id="0xg5z0"
+Client → Network → Server
+```
+
+You test each segment until you isolate the bottleneck.
+
+---
+
+# Step 1 — Confirm the symptom
+
+First identify:
+
+* Is latency constant or intermittent?
+* Internal or internet traffic?
+* One host or all hosts?
+* One region or global?
+* Only one protocol/app?
+
+Examples:
+
+* SSH slow
+* Website slow
+* API slow
+* Database replication lag
+
+---
+
+# Step 2 — Measure baseline latency
+
+Use `ping`.
+
+Example:
+
+```bash id="3q2s0x"
+ping google.com
+```
+
+Look at:
+
+* RTT (round-trip time)
+* Packet loss
+* Jitter (latency variation)
+
+Example:
+
+```text id="kqhnqf"
+time=12ms
+time=15ms
+time=200ms
+```
+
+This indicates unstable latency.
+
+---
+
+# Step 3 — Check packet loss
+
+Packet loss often causes latency spikes.
+
+Signs:
+
+* Timeouts
+* Retransmissions
+* Slow downloads
+* Choppy calls
+
+Use:
+
+```bash id="bh8h8o"
+ping -c 100 server-ip
+```
+
+Or better:
+
+```bash id="yc0l91"
+mtr server-ip
+```
+
+`mtr` combines:
+
+* ping
+* traceroute
+
+and continuously monitors path quality.
+
+Useful tool:
+[MTR Manual](https://www.bitwizard.nl/mtr/?utm_source=chatgpt.com)
+
+---
+
+# Step 4 — Trace the network path
+
+Use:
+
+```bash id="g96w5f"
+traceroute google.com
+```
+
+This shows:
+
+* Every router hop
+* Where latency increases
+
+Example:
+
+```text id="9j2oj7"
+1 1ms
+2 2ms
+3 5ms
+4 120ms  ← problem starts here
+```
+
+That identifies the problematic segment.
+
+Common findings:
+
+* ISP congestion
+* Cross-region routing
+* Bad peering
+* Firewall inspection delays
+
+---
+
+# Step 5 — Compare DNS latency
+
+Sometimes “network latency” is actually DNS delay.
+
+Test:
+
+```bash id="n6ez77"
+dig google.com
+```
+
+Check:
+
+* Query time
+
+Slow DNS example:
+
+```text id="d2i4pw"
+Query time: 500 msec
+```
+
+This can make websites feel slow before connection even begins.
+
+---
+
+# Step 6 — Test TCP connection setup
+
+Use:
+
+```bash id="ygq7cu"
+curl -v https://example.com
+```
+
+Watch timing:
+
+* DNS lookup
+* TCP connect
+* TLS handshake
+* TTFB
+
+Or:
+
+```bash id="w3rr1n"
+curl -w "%{time_connect}\n" https://example.com
+```
+
+High connect times indicate:
+
+* Network congestion
+* Firewall issues
+* Routing problems
+* Load balancer slowness
+
+---
+
+# Step 7 — Inspect interface statistics
+
+On Linux:
+
+```bash id="t6jz4y"
+ip -s link
+```
+
+Or:
+
+```bash id="t5q0ie"
+ifconfig
+```
+
+Look for:
+
+* RX/TX errors
+* Dropped packets
+* Overruns
+
+Bad signs:
+
+```text id="vcwgxg"
+dropped packets increasing
+errors increasing
+```
+
+---
+
+# Step 8 — Check bandwidth saturation
+
+High utilization increases latency.
+
+Use:
+
+```bash id="1xaxhh"
+iftop
+nload
+sar -n DEV 1
+```
+
+Look for:
+
+* Interface near max bandwidth
+* Traffic spikes
+* Backup jobs saturating links
+
+Classic issue:
+
+```text id="0e83es"
+10Gb link running at 99%
+→ queueing
+→ latency spikes
+```
+
+---
+
+# Step 9 — Check retransmissions
+
+TCP retransmits are a major clue.
+
+Use:
+
+```bash id="y7ijrk"
+netstat -s
+```
+
+Or:
+
+```bash id="r0wvl5"
+ss -s
+```
+
+High retransmits usually mean:
+
+* Packet loss
+* Congestion
+* Faulty links
+* Duplex mismatch
+
+---
+
+# Step 10 — Capture packets if needed
+
+Use:
+
+```bash id="b1yy2p"
+tcpdump -i eth0
+```
+
+Useful for:
+
+* Retransmissions
+* SYN retries
+* Reset packets
+* MTU problems
+
+Example:
+
+```bash id="a2m6wx"
+tcpdump -i eth0 port 443
+```
+
+Useful tool:
+[tcpdump Documentation](https://www.tcpdump.org?utm_source=chatgpt.com)
+
+---
+
+# Step 11 — Check server-side latency
+
+Sometimes the network is fine.
+
+The server may be slow responding.
+
+Check:
+
+* CPU saturation
+* Disk I/O
+* Thread pools
+* DB queries
+
+Compare:
+
+```text id="ykc8gf"
+Network RTT: 5ms
+API response: 3 seconds
+```
+
+That’s an application issue, not network latency.
+
+---
+
+# Step 12 — Investigate TLS delays
+
+HTTPS adds:
+
+* TLS handshake
+* Certificate validation
+
+Use:
+
+```bash id="mw5y42"
+openssl s_client -connect example.com:443
+```
+
+Check for:
+
+* Slow handshakes
+* Certificate chain problems
+* TLS negotiation delays
+
+Useful:
+[OpenSSL](https://www.openssl.org?utm_source=chatgpt.com)
+
+---
+
+# Step 13 — Look for geographic routing issues
+
+Latency depends heavily on distance.
+
+Example:
+
+```text id="yid2x5"
+Singapore → US East = naturally higher latency
+```
+
+Check:
+
+* CDN routing
+* Anycast behavior
+* Region misconfiguration
+
+Tools:
+
+* CDN analytics
+* traceroute
+* edge logs
+
+---
+
+# Common root causes
+
+| Symptom               | Likely Cause        |
+| --------------------- | ------------------- |
+| High ping             | Distance/congestion |
+| Packet loss           | Network instability |
+| Random spikes         | Saturation          |
+| Only HTTPS slow       | TLS/firewall        |
+| Slow first request    | DNS/TLS             |
+| Internal traffic slow | LAN/switch issue    |
+| One region affected   | ISP/CDN routing     |
+| High retransmits      | Packet loss         |
+
+---
+
+# Practical troubleshooting flow
+
+Most engineers go:
+
+```text id="lg9r5f"
+1. ping
+2. traceroute / mtr
+3. curl timings
+4. check packet loss
+5. inspect interfaces
+6. verify bandwidth
+7. inspect retransmits
+8. tcpdump if needed
+9. compare app latency
+```
+
+---
+
+# Very important distinction
+
+Users often say:
+
+```text id="wxbvw3"
+"The network is slow"
+```
+
+But the real issue may be:
+
+* DNS
+* TLS
+* Backend
+* Database
+* CDN
+* Browser rendering
+* Packet loss
+* Congestion
+
+Your job is isolating which layer actually introduces delay.

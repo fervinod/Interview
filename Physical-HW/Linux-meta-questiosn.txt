@@ -379,7 +379,7 @@ The connection is being kept around so that any delayed packets can be matched t
 
 =====================================
 
-RAID 0 1 5 10
+RAID 0 1 5 10  REDUNDANT ARRAY OF INDEPENDENT DISKS
 
 https://www.youtube.com/watch?v=U-OCdTeZLac&t=54s
 
@@ -388,4 +388,63 @@ https://www.youtube.com/watch?v=U-OCdTeZLac&t=54s
 | `RAID 0`   | Data split across disks for speed | Fast, no redundancy             |
 | `RAID 1`   | Data mirrored to another disk     | Redundancy via duplication      |
 | `RAID 5`   | Data + parity spread across disks | Fault tolerance with efficiency |
-| `RAID 10`  | Mirrored pairs striped together   | Speed + redundancy              |
+| `RAID 10`  | Mirrored pairs striped together (raid 0 and 1 )  | Speed + redundancy              |
+
+Easy memory trick
+RAID	Think of it as
+0	Speed only
+1	Copy
+5	Smart redundancy
+10	Best performance + redundancy
+
+
+RAID Parity :
+https://www.youtube.com/watch?v=BjuBloMHhKk
+
+================
+Queue Depth:
+
+    Queue depth is a storage parameter.
+    Queue depth is the number of I/O requests (SCSI commands) that can be queued at one time on a storage controller.
+    Each I/O request from the host's initiator HBA to the storage controller's target adapter consumes a queue entry.
+    Higher queue depth equates to better performance.
+
+
+Disk Queue:
+
+    This is a host disk parameter, configured by the host OS.
+    Disk Queue tracks the number of requests that are queued and waiting for a disk during the sample interval.
+    This counter will help in understanding disk performance issues at the host.
+    Disk queue value is OS configuration and recommended by the OS team.
+
+https://docs.netapp.com/us-en/ontap/san-config/set-queue-depth-task.html#linux-hosts-for-qlogic-hba
+
+Update the device queue depth value:
+
+    If you want to make the modifications persistent, perform the following steps:
+
+        Update the queue depths by adding the queue depth parameter to the /etc/modprobe.conf file for a Red Hat Enterprise Linux 5.x system and to the /etc/modprobe.d/scsi.conf file for a Red Hat Enterprise Linux 6.x or 7.x system, or a SUSE Linux Enterprise Server 11.x or 12.x system: options qla2xxx ql2xmaxqdepth=new_queue_depth
+
+        Create a new RAM disk image, and then reboot the host to make the updates persistent across reboots.
+
+        For more information, see the System administration for your version of Linux operating system.
+
+    If you want to modify the parameter only for the current session, run the following command:
+
+    echo new_queue_depth > /sys/module/qla2xxx/parameters/ql2xmaxqdepth
+
+    In the following example, the queue depth is set to 128.
+
+    echo 128 > /sys/module/qla2xxx/parameters/ql2xmaxqdepth
+
+
+
+
+Summary of CommandsTargetCommand TypePath/Utility
+Block Device	Temporary	/sys/block/<dev>/queue/nr_requests
+SCSI LUN  Temporary		/sys/bus/scsi/devices/<id>/queue_depth
+HBA  DriverPersistent 	/etc/modprobe.d/*.conf
+Network NIC Both ethtool -G
+
+================================
+The Boot Process TimelineBootloader Execution: GRUB, systemd-boot, or rEFInd locates the kernel (vmlinuz) and the filesystem image (initramfs.img) inside the /boot partition.Loading into Memory: The bootloader loads both vmlinuz and initramfs into the system RAM.Kernel Initialization: The CPU hands control over to vmlinuz. The kernel decompresses itself, initializes core CPU components, and locates the loaded initramfs structure in memory.The Temporary Environment: The kernel mounts initramfs as the temporary root filesystem (/) and executes its /init script.Driver & Storage Setup: This temporary environment loads storage drivers (such as NVMe, SATA, or RAID controllers), network drivers (for network boots), and cryptography modules (to decrypt a LUKS partition).The Switchover (Pivot Root): Once the actual hard drive or SSD partition is visible and decrypted, the init script mounts the real root filesystem (e.g., ext4, xfs, btrfs). It then cleans up memory and safely swaps the temporary initramfs out for the permanent filesystem using pivot_root.Systemd Takeover: The kernel launches the real initialization system (/sbin/init, usually symlinked to systemd), which finishes starting user services, UI environments, and login screens.

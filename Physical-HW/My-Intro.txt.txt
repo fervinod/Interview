@@ -1,0 +1,12 @@
+“I have over 16 +  years of experience working in infrastructure and operations-focused environments, with strong exposure to Linux systems, server hardware, troubleshooting, automation, and operational support. My background combines hands-on technical work with cross-functional collaboration, where I’ve been responsible not only for resolving incidents quickly, but also identifying root causes and improving long-term reliability and operational efficiency.”
+
+
+“I’ve worked closely with server hardware, including storage systems, RAID configurations, remote management tools like IPMI/iLO, and physical infrastructure troubleshooting.
+I understand the operational importance of uptime, hardware lifecycle management, and maintaining serviceability in large-scale environments.”
+
+
+
+
+“I believe my experience in infrastructure operations, Linux systems, hardware troubleshooting, root cause analysis, and automation aligns well with the role. I’m comfortable operating in fast-paced technical environments and enjoy solving complex operational challenges while continuously improving reliability and efficiency.”
+
+“What attracts me to this opportunity is the combination of large-scale infrastructure operations, deep technical troubleshooting, and continuous improvement. I’m particularly interested in environments where reliability, automation, and operational excellence are highly valued.”

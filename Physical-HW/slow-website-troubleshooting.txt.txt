@@ -1,0 +1,485 @@
+From an operations/SRE/infra perspective, the goal is to isolate *where latency is introduced* across the full request path:
+
+```text
+User → DNS → CDN/WAF → Load Balancer → Web Server → App → Cache → DB → External APIs
+```
+
+You want to narrow the bottleneck layer-by-layer instead of guessing.
+
+---
+
+# Phase 1 — Establish the Incident Scope
+
+First determine:
+
+* Is it all users or a subset?
+* All pages or specific endpoints?
+* Constant slowness or intermittent spikes?
+* One region or global?
+* Started after a deploy/change?
+
+Immediately gather:
+
+* Error rates
+* P95/P99 latency
+* Throughput (RPS)
+* CPU/memory
+* DB metrics
+* CDN cache hit rate
+
+Good dashboards:
+
+* Request latency
+* Saturation
+* Queue depth
+* 5xx errors
+* DB slow queries
+
+---
+
+# Phase 2 — Verify External Reachability
+
+Start outside the system.
+
+## DNS
+
+Check:
+
+* DNS lookup latency
+* Misconfigured records
+* Failing resolvers
+
+Tools:
+
+```bash
+dig example.com
+nslookup example.com
+```
+
+Watch for:
+
+* Long DNS resolution times
+* Incorrect geo-routing
+
+---
+
+## CDN / Edge
+
+If using [Cloudflare](https://www.cloudflare.com?utm_source=chatgpt.com), [Fastly](https://www.fastly.com?utm_source=chatgpt.com), or [Akamai](https://www.akamai.com?utm_source=chatgpt.com):
+
+Check:
+
+* Cache hit ratio
+* Edge response times
+* Origin fetch spikes
+* Regional degradation
+
+A low cache hit rate can overload origin infrastructure.
+
+Key metrics:
+
+* HIT vs MISS
+* Origin latency
+* Edge 5xx
+
+---
+
+# Phase 3 — Measure End-to-End Latency
+
+Use:
+
+```bash
+curl -w "@curl-format.txt" -o /dev/null -s https://example.com
+```
+
+Example format:
+
+```text
+time_namelookup
+time_connect
+time_appconnect
+time_starttransfer
+time_total
+```
+
+Interpretation:
+
+| Metric               | Meaning                   |
+| -------------------- | ------------------------- |
+| `time_namelookup`    | DNS latency               |
+| `time_connect`       | TCP connect               |
+| `time_appconnect`    | TLS handshake             |
+| `time_starttransfer` | Backend processing / TTFB |
+| `time_total`         | Full response             |
+
+If TTFB dominates:
+
+* App/server/DB issue likely.
+
+If connect/TLS dominates:
+
+* Network/LB/CDN issue.
+
+---
+
+# Phase 4 — Load Balancer Analysis
+
+Check:
+
+* Connection saturation
+* Active connections
+* TLS termination overhead
+* Queueing
+* Health check failures
+
+For:
+
+* [NGINX](https://nginx.org?utm_source=chatgpt.com)
+* [HAProxy](https://www.haproxy.org?utm_source=chatgpt.com)
+* [AWS Application Load Balancer](https://aws.amazon.com/elasticloadbalancing/application-load-balancer?utm_source=chatgpt.com)
+
+Watch for:
+
+* Request queue growth
+* Uneven backend distribution
+* Sticky-session imbalance
+
+Common issue:
+One unhealthy node causes cascading retries.
+
+---
+
+# Phase 5 — Web/App Server Health
+
+Now inspect hosts/containers.
+
+## System Metrics
+
+Run:
+
+```bash
+top
+htop
+vmstat 1
+iostat -x 1
+sar
+```
+
+Check:
+
+* CPU saturation
+* Load average
+* Memory pressure
+* Swap activity
+* Disk wait (`iowait`)
+* Context switching
+
+Critical signs:
+
+* CPU >90%
+* High run queue
+* OOM kills
+* Disk latency spikes
+
+---
+
+## Container/Kubernetes Checks
+
+If using [Kubernetes](https://kubernetes.io?utm_source=chatgpt.com):
+
+Check:
+
+```bash
+kubectl top pods
+kubectl get events
+kubectl describe pod
+```
+
+Watch for:
+
+* Pod restarts
+* CPU throttling
+* Memory limits
+* HPA autoscaling lag
+* Pending pods
+* Node pressure
+
+A classic issue:
+
+```text
+CPU limit too low → throttling → latency spikes
+```
+
+---
+
+# Phase 6 — Application Layer
+
+Now determine whether requests are slow inside the app.
+
+Use:
+
+* APM tracing
+* Structured logs
+* Request timing
+
+Tools:
+
+* [Datadog](https://www.datadoghq.com?utm_source=chatgpt.com)
+* [New Relic](https://newrelic.com?utm_source=chatgpt.com)
+* [OpenTelemetry](https://opentelemetry.io?utm_source=chatgpt.com)
+
+Look for:
+
+* Slow endpoints
+* Increased queue times
+* Thread pool exhaustion
+* Lock contention
+* GC pauses
+
+Typical bottlenecks:
+
+* Serialization
+* ORM inefficiency
+* Sync I/O
+* Blocking calls
+* Deadlocks
+
+---
+
+# Phase 7 — Database Investigation
+
+This is one of the most common root causes.
+
+Check:
+
+* Slow query logs
+* Connection pool exhaustion
+* Lock waits
+* Replication lag
+* Missing indexes
+
+Metrics:
+
+* Query duration
+* QPS
+* Buffer cache hit ratio
+* Row scans
+* Disk reads
+
+Commands vary, but examples:
+
+## PostgreSQL
+
+```sql
+SELECT * FROM pg_stat_activity;
+SELECT * FROM pg_locks;
+```
+
+## MySQL
+
+```sql
+SHOW PROCESSLIST;
+SHOW ENGINE INB STATUS;
+```
+
+Common ops findings:
+
+* Sudden full table scans
+* Traffic spike overwhelming DB
+* Connection leak
+* Long-running migrations
+
+---
+
+# Phase 8 — Cache Layer
+
+If using:
+
+* [Redis](https://redis.io?utm_source=chatgpt.com)
+* [Memcached](https://memcached.org?utm_source=chatgpt.com)
+
+Check:
+
+* Hit rate
+* Evictions
+* Memory fragmentation
+* Network latency
+
+A cache outage often looks like:
+
+```text
+Everything suddenly becomes slow
+DB CPU spikes
+```
+
+Because traffic falls through to origin/database.
+
+---
+
+# Phase 9 — External Dependencies
+
+Inspect:
+
+* Payment providers
+* Auth services
+* Third-party APIs
+* Object storage
+
+Look for:
+
+* Increased timeout rates
+* Slow upstream responses
+* Retry storms
+
+Classic issue:
+
+```text
+One slow dependency
+→ request threads pile up
+→ entire app stalls
+```
+
+---
+
+# Phase 10 — Network Analysis
+
+Check:
+
+* Packet loss
+* Retransmits
+* MTU mismatch
+* Cross-region latency
+
+Tools:
+
+```bash
+mtr
+traceroute
+tcpdump
+ss -s
+netstat
+```
+
+Indicators:
+
+* SYN backlog growth
+* Retransmissions
+* Established socket explosion
+
+---
+
+# Phase 11 — Correlate with Changes
+
+Always ask:
+“What changed?”
+
+Check:
+
+* Deployments
+* Feature flags
+* Infra changes
+* DB migrations
+* CDN rules
+* DNS changes
+* Autoscaling changes
+
+Most production slowdowns correlate with:
+
+* A release
+* Traffic spike
+* Capacity exhaustion
+
+---
+
+# Phase 12 — Capacity & Saturation
+
+Use the USE method:
+
+* Utilization
+* Saturation
+* Errors
+
+For every component:
+
+* CPU
+* Memory
+* Disk
+* Network
+* Queues
+* DB connections
+* Thread pools
+
+You are looking for the first saturated resource.
+
+---
+
+# Practical Triage Order
+
+In real incidents, ops teams usually go:
+
+1. Confirm scope
+2. Check dashboards
+3. Verify recent deploys
+4. Check CDN/LB
+5. Check host/container saturation
+6. Check DB
+7. Check cache
+8. Check dependencies
+9. Roll back if needed
+10. Scale temporarily
+11. Root cause later
+
+---
+
+# Fast Signals by Symptom
+
+| Symptom                  | Likely Cause        |
+| ------------------------ | ------------------- |
+| High TTFB                | App/DB              |
+| Random spikes            | GC/autoscaling      |
+| Region-specific slowness | CDN/network         |
+| All endpoints slow       | Infra saturation    |
+| Only dynamic pages slow  | DB/cache            |
+| CPU low but latency high | Locking/I/O         |
+| High 502/504             | Upstream timeout    |
+| Increasing queue depth   | Resource exhaustion |
+
+---
+
+# High-Value Operational Tools
+
+Monitoring:
+
+* [Prometheus](https://prometheus.io?utm_source=chatgpt.com)
+* [Grafana](https://grafana.com?utm_source=chatgpt.com)
+
+APM:
+
+* [Datadog](https://www.datadoghq.com?utm_source=chatgpt.com)
+* [New Relic](https://newrelic.com?utm_source=chatgpt.com)
+
+Synthetic testing:
+
+* [WebPageTest](https://www.webpagetest.org?utm_source=chatgpt.com)
+
+Tracing:
+
+* [Jaeger](https://www.jaegertracing.io?utm_source=chatgpt.com)
+
+---
+
+A good ops mindset is:
+
+```text
+Measure
+Localize
+Correlate
+Mitigate
+Then optimize
+```
+
+Not:
+
+```text
+Restart random things and hope
+```
