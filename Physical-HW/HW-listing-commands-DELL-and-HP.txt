@@ -223,5 +223,93 @@ ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_
 177 Wear_Leveling_Count     0x0013   094   094   000    Pre-fail  Always       -       6
 194 Temperature_Celsius     0x0022   068   068   000    Old_age   Always       -       32
 
+======================================================================================================
+
+ipmitool is a universal command-line utility used by system administrators to manage, monitor, and configure server hardware, regardless of the operating system.It talks directly to the server's Baseboard Management Controller (BMC)—such as Dell's iDRAC or HPE's iLO—using the industry-standard Intelligent Platform Management Interface (IPMI) protocol.
+====================================
+Core Uses of ipmitool
+1. Out-of-Band Remote ManagementYou can control a server even if the operating system is completely crashed, frozen, or powering down. By sending commands over the network to the management port, you can:Power cycle a dead server.Change boot devices (e.g., force the next boot to be from an ISO or PXE network deployment).Access the text console via Serial-over-LAN (SOL).
+
+2. Environmental & Health MonitoringIt polls physical motherboard sensors to read live hardware telemetry. It keeps track of:Temperatures: CPU, ambient chassis, and memory temperatures.Cooling: Fan rotation speeds (RPM) and status.Power: Live wattage consumption and power supply unit (PSU) redundancy health.Voltages: Motherboard rail power stabilities.
+
+
+3. Hardware Asset InventoryIt reads the physical FRU (Field Replaceable Unit) chips mapped across the hardware. This lets you pull detailed serial numbers, part numbers, and factory build specifications for CPUs, memory DIMMs, motherboards, and power grids without opening the rack.
+
+4. Diagnostic Log AnalysisIt accesses the hardware's internal System Event Log (SEL). If a hard drive fails, a memory module throws ECC errors, or a power supply loses a feed, the BMC logs it here. ipmitool lets you read these logs and clear them once the physical repairs are complete.
+
+5. Local Management Network ProvisioningWhen unboxing a brand new server, you can use ipmitool locally from the host OS terminal to assign a static IP address, subnet mask, and admin password to the Dell iDRAC or HPE iLO port without ever needing to reboot into the BIOS screen.
+
+============================================
+
+It talks directly to the server's Baseboard Management Controller (BMC)—such as Dell's iDRAC or HPE's iLO—using the industry-standard Intelligent Platform Management Interface (IPMI) protocol.
+
+View the entire hardware event history log:
+ipmitool sel list
+
+Show log statistics (e.g., percent full, last modification date):
+ipmitool sel info
+
+4. Network & iDRAC / iLO Management
+
+ipmitool lan print 1
+
+
+Change the management IP from dynamic (DHCP) to a static IP:
+
+ipmitool lan set 1 ipsrc static
+ipmitool lan set 1 ipaddr 192.168.1.50
+ipmitool lan set 1 netmask 255.255.255.0
+ipmitool lan set 1 defgw ipaddr 192.168.1.1
+
+
+Remote Server Management (Over the Network)
+
+If you want to run any of the commands above remotely from your laptop to a server across the data center, add the network flags (-I, -H, -U, -P):
+
+Check sensor data remotely over the network:
+
+ipmitool -I lanplus -H [iLO/iDRAC-IP] -U [Username] -P [Password] sdr list
+
+
+========================================================
+
+The nvidia-smi (NVIDIA System Management Interface) command is the primary, universal tool used to monitor and manage NVIDIA GPUs on Linux and Windows systems
+
+nvidia-smi
+
++-----------------------------------------------------------------------------------------+
+
+| NVIDIA-SMI 550.54.14              Driver Version: 550.54.14      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          On  | 00000000:4A:00.0   Off |                    0 |
+| N/A   42C    P0             145W / 700W |   4512MiB / 81559MiB   |     85%      Default |
+|                                         |                        |              Disabled|
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0  N/A  N/A       8432      C   python3 /opt/llm/inference.py                4500MiB |
++-----------------------------------------------------------------------------------------+
+
+
+
+
+CUDA (Compute Unified Device Architecture) 
+
+is a parallel computing platform and programming model created by NVIDIA.It allows software developers to use an NVIDIA Graphics Processing Unit (GPU) for general-purpose mathematical calculations, instead of just rendering graphics. This computing method is known as GPGPU (General-Purpose computing on Graphics Processing Units).
+
+Why Use CUDA?Massive Parallel Processing: Standard computer CPUs are optimized for sequential processing (doing 4 to 128 complex operations one after another). GPUs are built with thousands of simpler cores designed to handle millions of mathematical operations simultaneously.
+
+
+The Speed Advantage: By using CUDA, heavy computational workflows—like training AI large language models (LLMs) or rendering 3D simulations—can run up to 10 to 100 times faster than on a standard CPU.
 
 
