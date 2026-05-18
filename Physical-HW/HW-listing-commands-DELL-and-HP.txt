@@ -7,9 +7,9 @@ smartscl
 for NVME drives;
 
 for gpu
-
+***********************
 HPE :
-
+***********************
 NOTE:
 
 ssacli fully works with Gen10 servers, but hpasmcli does not.Starting with Gen10 architecture,
@@ -60,4 +60,168 @@ echo "=== CHASSIS HEALTH (CPU, RAM, Power) ===" && \
 
 ===============================================
 ssacli
-ssacli ctrl all show status: Checks the health of the hardware RAID Controller, cache module, and backup battery.ssacli ctrl slot=0 pd all show status: Checks the health of every physical Hard Drive or SSD.--processor / SHOW CPU: Displays processor socket health and internal frequency status.--memory / SHOW DIMM: Checks slot presence and tracks bad ECC hardware memory modules.--type=Chassis / SHOW POWERSUPPLY: Verifies if power supplies are active and running with full redundancy.
+ssacli ctrl all show status: Checks the health of the hardware RAID Controller, cache module, and backup battery.
+ssacli ctrl slot=0 pd all show status: Checks the health of every physical Hard Drive or SSD.
+--processor / SHOW CPU: Displays processor socket health and internal frequency status.
+--memory / SHOW DIMM: Checks slot presence and tracks bad ECC hardware memory modules.
+--type=Chassis / SHOW POWERSUPPLY: Verifies if power supplies are active and running with full redundancy.
+
+================================================================================================================
+************************
+DELL
+**********************
+
+1. racadm (The Remote Controller)Think of racadm as your ultimate remote management console. Because it speaks directly to the hardware's onboard iDRAC chip, it works even if the server is powered off or the operating system is completely frozen.
+
+Best used for: Changing BIOS configurations, checking system logs (LC logs), updating server firmware, and performing soft/hard server reboots remotely.
+
+2. omreport (The Local OS Reporter)omreport is part of Dell’s legacy OpenManage software package. It must be installed inside Windows or Linux. It essentially asks the operating system's software layers to query the motherboard and print out what it finds in a clean, human-readable format.
+
+Best used for: Quick command-line health checks on standard components (like RAM, fans, or temperature sensors) directly from inside your active OS terminal.
+
+3. perccli (The Dedicated Storage Specialist)perccli (PowerEdge RAID Controller CLI) completely ignores fans, power supplies, and CPUs. It has one job: to serve as the direct communication pipeline into your physical Dell PERC RAID card. It replaces the older legacy tool known as megacli.
+
+Best used for: Checking if a hard drive has physically failed, blinking a drive slot's locator LED light, checking the RAID controller battery backup unit (BBU), or building a new RAID 5 / RAID 10 storage array.
+
+
+racadm 
+
+racadm hwinventory PowerSupply
+
+Key Fields to Look For:PrimaryStatus: Should read OK. If it says Critical, the PSU has failed or lost input power.
+RedundancyStatus: Confirms if the power grid is safely running in a Redundant state.RatedWattage: Shows the capacity of the unit (e.g., 750 Watts).
+
+
+2. Check Physical Network Interface (NIC) Ports & MAC Addresses
+
+
+Use this command to identify your network adapters, their firmware levels, and link statuses without logging into the host OS.
+
+
+racadm hwinventory NetworkAdapter
+
+Key Fields to Look For:DeviceDescription: The exact model name (e.g., Intel X520 Dual Port 10Gb DA/SFP+).CurrentMACAddress: The physical hardware address needed for network switch or DHCP mapping.LinkStatus: Shows Up or Down to confirm if a physical network cable is plugged in and receiving a signal.
+
+3. Check Motherboard Fan Speeds & Thermal Sensors
+
+Use this command to ensure the server chassis is cooling properly and that no internal fans have failed.
+
+racadm getssnstatus -c
+
+Key Fields to Look For:Sensor Name: Lists individual components like Fan1 RPM, Fan2 RPM, or System Board Inlet Temp.
+Status: Displays Normal, Warning, or Critical.Reading: Displays the exact speed in RPM (Revolutions Per Minute) or the temperature in Celsius.
+
+
+omreport
+
+1. Check Overall Chassis Health & Main Power Supplies
+
+omreport chassis pwrsupplies
+
+Key Fields to Look For:Main System Chassis Power Redundancy: Look for Redundant. If it says Degraded, you have lost a power feed.Status: A green checkmark or Ok means the individual power supply is healthy.Location: Pinpoints which specific unit needs attention (e.g., PS 1 or PS 2).
+
+2. Check Physical CPU Core Profiles & Socket Health
+omreport chassis processors
+
+Key Fields to Look For:Status: Should read Ok.Processor Brand: Displays the exact model name (e.g., Intel(R) Xeon(R) Silver 4210).Core Count: Displays active internal core totals per socket.Current Speed: Validates the frequency clocks matching target thresholds.
+
+3. Check Motherboard Cooling Fans & Airflow
+
+omreport chassis fans
+
+
+3. Check the Status of Virtual Drives (RAID Volumes)
+Use this command to check the health and configuration layout of your logical RAID volumes (the actual virtual disks presented to your operating system)
+omreport storage vdisk controller=0
+
+
+2. Check the Status of All Physical Disks (HDDs/SSDs)
+omreport storage pdisk controller=0
+
+omreport storage controller
+omreport storage battery
+
+
+1. Check the Storage Controller Health & Cache Battery
+perccli /c0 show all
+
+2. Check All Physical Disks (HDDs/SSDs) for Failures
+perccli /c0/eall/sall show
+
+3. Check Virtual Drives (RAID Volumes) Status
+perccli /c0/vall show
+
+
+If your NVMe drives are attached to a Dell hardware RAID controller (like a PERC Tri-Mode card), or if you want to view them via Dell's built-in management tools, use:Via OpenManage (OMSA):bash
+
+omreport storage nvmeadapter controller=0
+
+Via Local RACADM (iDRAC CLI):
+
+racadm hwinventory | grep -i "NVMe"
+
+
+==========================================================================================================
+NVME COmmands:
+
+1. The Standard Universal Commands
+
+sudo nvme list
+
+Node          SN            Model                           Namespace  Usage                Format         FW Rev
+------------  ------------  ------------------------------  ---------  -------------------  -------------  --------
+/dev/nvme0n1  4260A03ETCG8  Dell Ent NVMe CM6 RI 15.36TB    1          1.79 TB / 15.36 TB   512 B + 0 B    2.1.8
+
+Check the real-time health and wear level of a specific NVMe drive:
+sudo nvme smart-log /dev/nvme0n1
+
+This generates an instant read-out of the drive's current temperature, percentage used (wear-out life), and media errors.
+
+
+Alternative (smartctl syntax):If you prefer smartctl, you don't need vendor-specific RAID bypass arguments for direct-attached NVMe drives. Simply target the node:
+sudo smartctl -a /dev/nvme0n1
+
+
+========================================================================================================================
+
+smartctl 
+
+The smartctl command is a universal, open-source Linux command-line utility used to control, monitor, and read the S.M.A.R.T. (Self-Monitoring, Analysis, and Reporting Technology) data built into modern storage drives (SATA, SAS, and NVMe).
+
+It works identically across Dell, HPE, and generic server platforms to predict drive failures and check mechanical or flash-memory health.
+
+Check Overall Health Status (Pass/Fail):
+sudo smartctl -H /dev/nvme0n1
+Print All Health Attributes and Information:
+
+
+sudo smartctl -a /dev/sda
+
+This dumps the entire drive profile, including its serial number, firmware version, error logs, and lifetime wear parameters.
+
+
+Run a Safe, Non-Destructive Background Self-Test:
+sudo smartctl -t short /dev/sda
+
+
+Running sudo smartctl -a /dev/sda on a healthy enterprise disk output looks similar to this:
+=== START OF INFORMATION SECTION ===
+Device Model:     SAMSUNG MZ7KH1T9HAJR-00005
+Serial Number:    S45VNY0M101234
+Firmware Version: HDB7301Q
+User Capacity:    1,920,383,488,000 bytes [1.92 TB]
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+
+=== START OF READ SMART DATA SECTION ===
+SMART overall-health self-assessment test result: PASSED
+
+Vendor Specific SMART Attributes with Thresholds:
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+  5 Reallocated_Sector_Ct   0x0033   100   100   010    Pre-fail  Always       -       0
+  9 Power_On_Hours          0x0032   092   092   000    Old_age   Always       -       35412
+177 Wear_Leveling_Count     0x0013   094   094   000    Pre-fail  Always       -       6
+194 Temperature_Celsius     0x0022   068   068   000    Old_age   Always       -       32
+
+
+
