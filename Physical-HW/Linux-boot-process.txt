@@ -1,0 +1,11 @@
+https://www.yoinsights.com/step-by-step-red-hat-enterprise-linux-7-booting-process/
+
+Change Default Boot Target (Permanent)
+
+Use these commands to change the mode for future reboots:Set to Text Mode (CLI/Server):sudo systemctl set-default multi-user.targetSet to Graphical Mode (GUI/Desktop):sudo systemctl set-default graphical.targetApply changes:sudo reboot
+
+Switch Target Immediately (Temporary)
+
+To switch without rebooting, use systemctl isolate:Switch to Text Mode: sudo systemctl isolate multi-user.targetSwitch to Graphical Mode: sudo systemctl isolate graphical.target
+
+VerificationCheck current default target:systemctl get-defaultList all available targets:systemctl list-units --type target
