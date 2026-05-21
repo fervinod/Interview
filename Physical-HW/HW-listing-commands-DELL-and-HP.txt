@@ -71,15 +71,21 @@ ssacli ctrl slot=0 pd all show status: Checks the health of every physical Hard 
 DELL
 **********************
 
-1. racadm (The Remote Controller)Think of racadm as your ultimate remote management console. Because it speaks directly to the hardware's onboard iDRAC chip, it works even if the server is powered off or the operating system is completely frozen.
+1. racadm (The Remote Controller)Think of racadm as your ultimate remote management console. 
+Because it speaks directly to the hardware's onboard iDRAC chip,
+it works even if the server is powered off or the operating system is completely frozen.
 
 Best used for: Changing BIOS configurations, checking system logs (LC logs), updating server firmware, and performing soft/hard server reboots remotely.
 
-2. omreport (The Local OS Reporter)omreport is part of Dell’s legacy OpenManage software package. It must be installed inside Windows or Linux. It essentially asks the operating system's software layers to query the motherboard and print out what it finds in a clean, human-readable format.
+2. omreport (The Local OS Reporter)omreport is part of Dell’s legacy OpenManage software package.
+It must be installed inside Windows or Linux.
+It essentially asks the operating system's software layers to query the motherboard and print out what it finds in a clean, human-readable format.
 
 Best used for: Quick command-line health checks on standard components (like RAM, fans, or temperature sensors) directly from inside your active OS terminal.
 
-3. perccli (The Dedicated Storage Specialist)perccli (PowerEdge RAID Controller CLI) completely ignores fans, power supplies, and CPUs. It has one job: to serve as the direct communication pipeline into your physical Dell PERC RAID card. It replaces the older legacy tool known as megacli.
+3. perccli (The Dedicated Storage Specialist)perccli (PowerEdge RAID Controller CLI) completely ignores fans, power supplies, and CPUs.
+It has one job: to serve as the direct communication pipeline into your physical Dell PERC RAID card. 
+It replaces the older legacy tool known as megacli.
 
 Best used for: Checking if a hard drive has physically failed, blinking a drive slot's locator LED light, checking the RAID controller battery backup unit (BBU), or building a new RAID 5 / RAID 10 storage array.
 
@@ -100,7 +106,8 @@ Use this command to identify your network adapters, their firmware levels, and l
 
 racadm hwinventory NetworkAdapter
 
-Key Fields to Look For:DeviceDescription: The exact model name (e.g., Intel X520 Dual Port 10Gb DA/SFP+).CurrentMACAddress: The physical hardware address needed for network switch or DHCP mapping.LinkStatus: Shows Up or Down to confirm if a physical network cable is plugged in and receiving a signal.
+Key Fields to Look For:DeviceDescription: The exact model name (e.g., Intel X520 Dual Port 10Gb DA/SFP+).CurrentMACAddress:
+The physical hardware address needed for network switch or DHCP mapping.LinkStatus: Shows Up or Down to confirm if a physical network cable is plugged in and receiving a signal.
 
 3. Check Motherboard Fan Speeds & Thermal Sensors
 
