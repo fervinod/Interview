@@ -1,7 +1,7 @@
 UNIVERSAL HW COMMANDS:
 
 IPMITOOL.
-smartscl
+smartctl
 
 
 for NVME drives;
