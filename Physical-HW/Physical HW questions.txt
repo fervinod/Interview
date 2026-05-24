@@ -6,7 +6,8 @@ Here’s a strong, structured answer you can give during a technical screening. 
 
 ## Sample Recruiter / Technical Screening Answer
 
-“If I’m physically standing in front of a host that is not powering on, I would follow a structured troubleshooting approach starting from the most fundamental checks before escalating into deeper hardware diagnostics.”
+“If I’m physically standing in front of a host that is not powering on, I would follow a structured troubleshooting approach starting from the
+most fundamental checks before escalating into deeper hardware diagnostics.”
 
 ### 1. Verify Physical & Environmental Conditions
 
