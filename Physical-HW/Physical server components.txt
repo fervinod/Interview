@@ -81,7 +81,8 @@ Users / Applications
 Storage       GPU Compute
 Subsystem      Acceleration
 
-Here’s a structured breakdown of the major physical components inside a server and what each one does. This is very useful for Data Center Operations, Hardware Support, Infrastructure, and Server Troubleshooting interviews.
+Here’s a structured breakdown of the major physical components inside a server and what each one does. 
+This is very useful for Data Center Operations, Hardware Support, Infrastructure, and Server Troubleshooting interviews.
 
 ---
 
