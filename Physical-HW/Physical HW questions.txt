@@ -2374,3 +2374,74 @@ Sound cards
 Capture/video cards
 FPGA/AI accelerators
 SAS/SATA controllers
+=============================================================================
+Q. if the memory are of different speed , what is total speed on the host
+
+If RAM modules of different speeds are installed in a host/server, the system usually runs all memory at the speed of the slowest DIMM.
+
+Example:
+
+DIMM1 = 3200 MT/s
+DIMM2 = 2666 MT/s
+DIMM3 = 2933 MT/s
+
+Result:
+
+Entire memory subsystem typically runs at 2666 MT/s
+
+Why this happens
+
+The memory controller must use settings that all DIMMs can reliably support:
+
+Frequency
+Timings
+Voltage
+
+So it downclocks faster DIMMs to match the slowest module.
+
+Best practice
+
+For maximum stability/performance:
+
+Same vendor
+Same capacity
+Same rank
+Same speed
+Same timings
+
+Ideally identical DIMMs across channels.
+
+3. Mixed DIMM types
+
+Mixing:
+
+RDIMM
+LRDIMM
+UDIMM
+
+may:
+
+Reduce speed
+Prevent POST
+Be unsupported
+
+
+
+What happens with mismatched CPUs
+Best case
+
+Server boots with reduced/common capability.
+
+Possible:
+
+Lower frequency
+Reduced turbo behavior
+Common case
+
+POST warning:
+
+Unsupported processor configuration
+Processor mismatch
+Worst case
+
+Server will not POST at all.
