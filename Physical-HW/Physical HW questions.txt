@@ -2356,3 +2356,20 @@ Once stable:
 * Test after each addition
 
 That isolates the failing hardware quickly.
+
+===================================================
+
+Many types of expansion hardware can be attached to PCIe (Peripheral Component Interconnect Express) slots in a server or PC.
+
+Common PCIe devices include:
+
+Graphics cards (GPU)
+RAID/storage controllers
+Network interface cards (NIC)
+Fibre Channel HBAs
+NVMe expansion cards
+USB expansion cards
+Sound cards
+Capture/video cards
+FPGA/AI accelerators
+SAS/SATA controllers
