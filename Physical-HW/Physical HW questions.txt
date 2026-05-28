@@ -2811,3 +2811,114 @@ Helps ensure:
 ---
 
 If you want, tell me your server model and I can say whether updating BIOS is actually worth it for your case.
+
+======================================================================
+
+
+**POST** stands for **Power-On Self-Test**.
+
+It’s the very first diagnostic process a server or computer runs immediately after it is powered on, before the operating system starts.
+
+---
+
+# What POST does
+
+When you turn on a system, POST checks essential hardware such as:
+
+* CPU (processor)
+* RAM (memory)
+* BIOS/UEFI firmware
+* Graphics adapter (if present)
+* Storage controllers (RAID/SATA/NVMe)
+* Keyboard and basic input devices
+* System board integrity
+
+---
+
+# Why POST is important
+
+POST ensures the system is:
+
+* Functional enough to boot an operating system
+* Free of critical hardware failures
+
+If something is wrong, the system may:
+
+* Stop booting
+* Show error messages
+* Emit beep codes
+* Show LED diagnostic indicators
+
+---
+
+# What happens during POST (simplified flow)
+
+1. Power is applied
+2. CPU starts executing BIOS/UEFI firmware
+3. Hardware initialization begins
+4. Memory is tested (“memory training”)
+5. Devices like storage and PCIe are detected
+6. Basic system checks complete
+7. Boot device is selected
+8. Bootloader starts (OS loading begins)
+
+---
+
+# What happens if POST fails
+
+If POST fails, you may see:
+
+* No display output
+* Reboot loops
+* Beep codes (pattern-based errors)
+* LED error codes on server front panel
+* iLO/iDRAC hardware logs reporting failure
+
+---
+
+# Common POST issues
+
+* Faulty RAM
+* Missing or failed CPU
+* Bad motherboard
+* Power supply failure
+* Incorrect BIOS settings
+* Failed PCIe card
+* Overheating at startup
+
+---
+
+# Server-specific POST behavior
+
+On enterprise systems like:
+
+* Hewlett Packard Enterprise ProLiant
+* Dell Technologies PowerEdge
+
+POST is often extended and includes:
+
+* RAID controller initialization
+* iLO/iDRAC checks
+* Smart array detection
+* Firmware inventory checks
+
+This makes server POST longer than a normal PC.
+
+---
+
+# How to see POST status
+
+You can observe POST using:
+
+* BIOS screen output
+* Beep codes
+* Front panel LEDs
+* iLO / iDRAC logs
+* Serial console output
+
+---
+
+# Simple summary
+
+POST = the server’s “startup self-check” that verifies hardware is working before loading the operating system.
+
