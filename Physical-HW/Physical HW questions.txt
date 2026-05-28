@@ -2445,3 +2445,7 @@ Processor mismatch
 Worst case
 
 Server will not POST at all.
+
+===========================================================
+
+How to reset bios password 
