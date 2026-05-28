@@ -2449,3 +2449,365 @@ Server will not POST at all.
 ===========================================================
 
 How to reset bios password 
+
+Resetting a BIOS/UEFI password on a server depends on the vendor and whether you have physical access.
+
+For enterprise servers from Hewlett Packard Enterprise, Dell Technologies, or Lenovo, the usual methods are:
+
+* Password-clear jumper/switch
+* System maintenance mode
+* Vendor support unlock
+* CMOS/NVRAM reset (sometimes)
+
+# Important note
+
+Modern enterprise servers often store BIOS passwords in:
+
+* EEPROM
+* Secure controller
+* TPM-related storage
+
+So simply removing the CMOS battery may NOT clear the password.
+
+---
+
+# Method 1 — Password clear jumper/switch (preferred)
+
+Most servers have a motherboard jumper or DIP switch specifically for password reset.
+
+Common labels:
+
+* PSWD
+* PASSWORD
+* CLR_PWD
+* PWD_CLR
+* S5/S6 maintenance switch
+
+---
+
+# General procedure
+
+## 1. Power off server
+
+Disconnect:
+
+* AC power cables
+
+Wait:
+
+* 30 seconds
+
+---
+
+## 2. Open chassis
+
+Use ESD precautions.
+
+---
+
+## 3. Locate password-clear jumper/switch
+
+Check:
+
+* Chassis lid diagram
+* Service manual
+* Motherboard silkscreen
+
+---
+
+## 4. Enable password clear
+
+Examples:
+
+* Move jumper from pins 1-2 → 2-3
+* Toggle maintenance switch ON
+
+---
+
+## 5. Boot server once
+
+This clears BIOS password.
+
+---
+
+## 6. Power off again
+
+Return jumper/switch to original position.
+
+---
+
+# HPE ProLiant password reset
+
+On Hewlett Packard Enterprise servers:
+
+Usually:
+
+* System maintenance switch
+
+Common examples:
+
+* Switch S1 or S5 for password disable
+* Switch S6 for NVRAM clear
+
+Procedure:
+
+1. Power off
+2. Set password-disable switch
+3. Boot server
+4. Enter BIOS
+5. Clear/change password
+6. Power off
+7. Restore switch position
+
+Exact switch varies by model/gen.
+
+---
+
+# Dell PowerEdge password reset
+
+On Dell Technologies servers:
+
+Use:
+
+* `PSWD` jumper
+
+Typical process:
+
+1. Remove power
+2. Move PSWD jumper
+3. Boot system
+4. Password clears
+5. Shutdown
+6. Restore jumper
+
+Some models also support:
+
+```bash id="f4xyjt"
+racadm get BIOS.Security
+```
+
+But RACADM usually cannot bypass unknown BIOS passwords.
+
+---
+
+# Lenovo server password reset
+
+On Lenovo servers:
+
+Use:
+
+* Clear CMOS/password jumper
+
+Sometimes called:
+
+* JCMOS1
+* PASSWD
+
+---
+
+# If jumper method fails
+
+Modern secure servers may require:
+
+* Vendor support challenge-response unlock
+* Motherboard replacement
+* Ownership verification
+
+Especially with:
+
+* TPM enabled
+* Secure Boot enforced
+* Enhanced security mode
+
+---
+
+# CMOS battery removal
+
+May work on older systems only.
+
+Procedure:
+
+1. Remove AC power
+2. Remove CMOS battery
+3. Hold power button 15 seconds
+4. Wait 5–10 minutes
+5. Reinstall battery
+
+Often insufficient for enterprise systems.
+
+---
+
+# Important warnings
+
+Resetting BIOS password may also reset:
+
+* TPM state
+* Secure Boot config
+* Boot mode
+* RAID boot order
+
+Potential consequences:
+
+* BitLocker recovery prompts
+* Hypervisor boot failure
+* TPM mismatch alerts
+
+---
+
+# Best practice after password reset
+
+Verify:
+
+* Boot order
+* RAID visibility
+* Virtualization settings
+* TPM/Secure Boot
+* Date/time
+
+Especially on production virtualization hosts.
+
+=======================================================
+Updating BIOS/UEFI is usually done for specific technical reasons, not just because a newer version exists.
+
+Here are the main reasons:
+
+---
+
+## 1. Security fixes
+
+BIOS updates often patch serious vulnerabilities such as:
+
+* CPU speculative execution flaws (e.g., Spectre/Meltdown-type issues)
+* Secure Boot bypass bugs
+* Privilege escalation in firmware
+* iLO/iDRAC management interface vulnerabilities
+
+This is one of the most important reasons in production environments.
+
+---
+
+## 2. Hardware compatibility
+
+A BIOS update may be required to support new hardware, such as:
+
+* Newer CPUs (microcode updates)
+* Higher-capacity RAM modules
+* New NVMe drives or backplanes
+* Updated PCIe devices (RAID/NIC/GPU cards)
+
+Without the update, the system may not boot or may not detect hardware correctly.
+
+---
+
+## 3. Stability fixes (bug fixes)
+
+Firmware updates often resolve issues like:
+
+* Random reboots or hangs
+* POST failures
+* System freezing under load
+* Incorrect hardware detection
+* Fan or thermal control issues
+
+---
+
+## 4. Performance improvements
+
+Some updates improve:
+
+* CPU power management
+* Memory training and latency
+* PCIe bus efficiency
+* Overall system responsiveness under load
+
+---
+
+## 5. Microcode updates for CPUs
+
+BIOS updates often include CPU microcode patches that:
+
+* Fix errata (CPU design bugs)
+* Improve stability under virtualization
+* Enhance security and instruction handling
+
+---
+
+## 6. Virtualization improvements
+
+BIOS updates may improve support for:
+
+* Intel VT-x / AMD-V
+* SR-IOV for NICs
+* IOMMU / PCI passthrough
+* Hypervisor compatibility (VMware, Hyper-V, KVM)
+
+---
+
+## 7. Power and thermal management improvements
+
+Updates can refine:
+
+* Fan speed curves
+* Power capping behavior
+* Thermal throttling thresholds
+* PSU load balancing
+
+This can reduce noise or prevent overheating shutdowns.
+
+---
+
+## 8. Vendor support requirements
+
+Manufacturers like:
+
+* Hewlett Packard Enterprise
+* Dell Technologies
+
+often require updated BIOS before:
+
+* Opening support cases
+* Installing new OS versions
+* Applying firmware bundles (SPP, etc.)
+
+---
+
+## 9. Fixing boot or installation issues
+
+BIOS updates may resolve:
+
+* OS installer not detecting storage
+* UEFI boot failures
+* PXE boot problems
+* RAID controller initialization issues
+
+---
+
+## 10. Micro-compatibility between components
+
+Helps ensure:
+
+* CPU + chipset compatibility
+* RAM + memory controller tuning
+* PCIe device negotiation stability
+
+---
+
+# When you SHOULD update BIOS
+
+* Security advisory exists
+* New CPU/RAM/hardware being installed
+* System instability or unexplained crashes
+* Vendor recommends it for your model
+* Required for OS upgrade or firmware bundle
+
+---
+
+# When you might NOT need to update
+
+* System is stable and in production
+* No relevant fixes apply to your environment
+* No new hardware being added
+
+---
+
+If you want, tell me your server model and I can say whether updating BIOS is actually worth it for your case.
