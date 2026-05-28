@@ -2137,3 +2137,222 @@ Option 67	Boot filename
 Option 60	PXE client identification
 Option 43	Vendor-specific PXE info
 Option 150	Alternate TFTP server (Cisco environments)
+
+==============================================================================
+Minimal boot:
+
+For an Hewlett Packard Enterprise server, a **minimal boot** (sometimes called “bare minimum boot” or “strip-down boot”) is used to isolate hardware causing POST failures, power-offs, hangs, or no-boot conditions.
+
+Typical goal:
+
+* Boot with only essential components installed
+* Eliminate faulty DIMMs, PCIe cards, disks, or peripherals
+
+## Minimal boot configuration for HPE servers
+
+Keep only:
+
+* System board
+* 1 CPU
+* 1 known-good RAM DIMM
+* Power supplies
+* iLO management connected
+* Video if needed
+
+Remove/disconnect:
+
+* All disks
+* All PCIe cards
+* Additional CPUs
+* Extra DIMMs
+* USB devices
+* External peripherals
+* GPU cards
+* Fibre/HBA/network add-in cards
+
+---
+
+# Recommended minimal boot sequence
+
+## 1. Power off completely
+
+Remove:
+
+* AC power cables
+* Wait ~30 seconds
+
+---
+
+## 2. Install only minimum hardware
+
+### CPU
+
+Keep only:
+
+* CPU1 / Processor 1
+
+Remove:
+
+* CPU2 (if dual socket)
+
+---
+
+### Memory
+
+Install:
+
+* One DIMM only
+
+Use the primary slot:
+
+* Usually `A1`
+* Check motherboard silkscreen or QuickSpecs
+
+Use known-good DIMM.
+
+---
+
+### Storage
+
+Disconnect:
+
+* SAS/SATA backplane cables
+* NVMe drives if possible
+
+You do not need disks for POST testing.
+
+---
+
+### PCIe
+
+Remove all add-on cards:
+
+* RAID controller (if onboard storage available)
+* NICs
+* HBAs
+* GPUs
+
+---
+
+# 3. Clear NVRAM / reset system ROM (optional)
+
+On many HPE ProLiant servers:
+
+* Use system maintenance switch
+* Or iLO virtual power reset
+
+Common:
+
+* S6 switch for NVRAM clear (varies by model)
+
+Check maintenance switch diagram on chassis lid.
+
+---
+
+# 4. Boot and observe
+
+Watch for:
+
+* Fans ramping then stabilizing
+* POST progress
+* iLO health LEDs
+* Beep/error codes
+* Front UID/health LEDs
+
+---
+
+# 5. Use iLO logs
+
+Best diagnostic source on HPE.
+
+Check:
+
+* Integrated Management Log (IML)
+* iLO event log
+* Power subsystem
+* Thermal events
+
+Useful via:
+
+* iLO web GUI
+* SSH
+* REST API
+
+---
+
+# Common failure isolation flow
+
+## If no POST
+
+Try:
+
+1. Different DIMM
+2. Different DIMM slot
+3. Remove RAID controller
+4. Remove CPU2
+5. Swap PSU
+6. Minimum fans installed correctly
+
+---
+
+## If powers on then off
+
+Usually:
+
+* CPU issue
+* DIMM issue
+* Shorted PCIe card
+* PSU failure
+* VRM/system board issue
+* Thermal protection
+
+---
+
+# HPE specific diagnostics
+
+## iLO CLI examples
+
+Check power:
+
+```bash
+show /system1
+```
+
+View logs:
+
+```bash
+show /map1/log1
+```
+
+Power on:
+
+```bash
+power on
+```
+
+---
+
+# Smart Array note
+
+If using HPE Smart Array:
+
+* System can POST without disks
+* RAID config stored on controller + disks metadata
+
+---
+
+# Good sign during minimal boot
+
+You want:
+
+* Stable power
+* Fans normalize after initial ramp
+* iLO reachable
+* POST reaches memory count/BIOS screen
+
+Once stable:
+
+* Re-add components one at a time
+* Test after each addition
+
+That isolates the failing hardware quickly.
