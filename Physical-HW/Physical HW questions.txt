@@ -2921,4 +2921,14 @@ You can observe POST using:
 # Simple summary
 
 POST = the server’s “startup self-check” that verifies hardware is working before loading the operating system.
+------------------
+
+* How do you manage firmware consistency across thousands of servers?
+* What are common failure points in large-scale server environments?
+* How do you handle vendor hardware RMA processes (Dell/HPE/Lenovo)?
+
+reset idrac password 
+
+reset bios password https://www.youtube.com/watch?v=54vqKBiTGSg
+how to power drain 
 
