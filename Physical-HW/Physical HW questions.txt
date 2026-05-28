@@ -2358,6 +2358,7 @@ Once stable:
 That isolates the failing hardware quickly.
 
 ===================================================
+Common PCIe (Peripheral Component Interconnect Express) devices are expansion cards used to enhance computer functionality, providing high-speed data transfer directly to the motherboard
 
 Many types of expansion hardware can be attached to PCIe (Peripheral Component Interconnect Express) slots in a server or PC.
 
