@@ -2932,3 +2932,32 @@ reset idrac password
 reset bios password https://www.youtube.com/watch?v=54vqKBiTGSg
 how to power drain 
 
+=====================================
+HARDWARE REFRESH:
+A hardware refresh refers to the process of replacing, upgrading, or
+modernizing existing IT hardware to improve performance, reliability, security, or compatibility.
+
+This usually happens after hardware reaches:
+
+end of life (EOL),
+becomes outdated,
+performs too slowly,
+or no longer meets business requirements.
+
+Examples of hardware refresh activities include:
+
+Replacing old servers with newer models
+Upgrading RAM, CPUs, or storage
+Migrating from HDDs to SSDs
+Replacing networking equipment like switches or routers
+Deploying newer workstations or laptops to employees
+
+In a data center or enterprise environment, a hardware refresh project often includes:
+
+Planning and inventory assessment
+Hardware procurement
+Server build and configuration
+Data migration or workload migration
+Testing and validation
+Deployment/shipping
+Decommissioning old hardware
