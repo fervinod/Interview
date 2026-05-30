@@ -2978,5 +2978,15 @@ If by **"power drain"** you mean fully discharging residual power from a Dell se
 6. Reconnect the power cables and start the server normally.
 
 For many Dell PowerEdge servers, this procedure is referred to as a **flea power drain** or **power reset**.
+================
+| Component                              | What it does                                                                                |
+| -------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **UPS (Uninterruptible Power Supply)** | Provides instant backup power from batteries when utility power fails.                      |
+| **PDU (Power Distribution Unit)**      | Distributes electrical power from the UPS or utility source to servers and equipment racks. |
+| **STS (Static Transfer Switch)**       | Automatically switches a load between two power sources without interruption.               |
+| **ATS (Automatic Transfer Switch)**    | Transfers power from utility power to a generator (or back) when an outage occurs.          |
+| **Generator**                          | Produces electricity during extended utility power outages.                                 |
+| **Breaker (Circuit Breaker)**          | Safety device that automatically cuts power when it detects an overload or fault.           |
+| **Battery String**                     | A group of connected batteries that supply DC power to the UPS during outages.              |
 
 
