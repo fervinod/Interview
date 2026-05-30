@@ -2994,6 +2994,13 @@ Simplified Power Flow
 
 Utility Power → ATS → UPS (with Battery String) → PDU → Servers
 
+Utility
+   │
+PDU A ─── PSU 1 ──┐
+                  │ Server
+PDU B ─── PSU 2 ──┘
+
+
 If utility power fails:
 
 UPS batteries provide immediate power.
@@ -3002,3 +3009,53 @@ ATS transfers the load to the generator.
 PDU continues delivering power to the servers.
 
 This layered design helps ensure data centers remain operational even during power failures.
+
+----------------------------------------------------
+UPS
+ │
+ ├── PDU A ──> PSU 1 of every server
+ │
+ └── PDU B ──> PSU 2 of every server
+
+Rack
+ ├── Server 1 (2 PSUs)
+ ├── Server 2 (2 PSUs)
+ ├── Server 3 (2 PSUs)
+ └── ...
+
+UPS
+ │
+ ├── PDU A ──> PSU 1 of every server
+ │
+ └── PDU B ──> PSU 2 of every server
+
+Rack
+ ├── Server 1 (2 PSUs)
+ ├── Server 2 (2 PSUs)
+ ├── Server 3 (2 PSUs)
+ └── ...
+---------------------------------------------------
+
+How many PSUs are connected to a server?
+
+Typically 2 PSUs per server in a data center.
+
+PSU 1 → connected to PDU A
+PSU 2 → connected to PDU B
+
+This provides power redundancy. If one PSU or power path fails, the server continues running on the other.
+
+Some high-end servers or storage systems may have 3 or 4 PSUs, but 2 is the standard answer.
+
+How many PSUs are connected to a rack?
+
+A rack itself usually does not have PSUs. The servers inside the rack have PSUs.
+
+For example:
+
+Rack Contents	Total PSUs
+20 servers × 2 PSUs each	40 PSUs
+30 servers × 2 PSUs each	60 PSUs
+40 servers × 2 PSUs each	80 PSUs
+
+So a typical rack may contain 40–80 server PSUs, depending on how many servers are installed.
