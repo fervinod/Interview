@@ -2990,3 +2990,15 @@ For many Dell PowerEdge servers, this procedure is referred to as a **flea power
 | **Battery String**                     | A group of connected batteries that supply DC power to the UPS during outages.              |
 
 
+Simplified Power Flow
+
+Utility Power → ATS → UPS (with Battery String) → PDU → Servers
+
+If utility power fails:
+
+UPS batteries provide immediate power.
+Generator starts up.
+ATS transfers the load to the generator.
+PDU continues delivering power to the servers.
+
+This layered design helps ensure data centers remain operational even during power failures.
