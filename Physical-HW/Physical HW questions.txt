@@ -2961,3 +2961,22 @@ Data migration or workload migration
 Testing and validation
 Deployment/shipping
 Decommissioning old hardware
+==================================================
+
+power drain a dell server / flea power drain 
+
+If by **"power drain"** you mean fully discharging residual power from a Dell server (often done during troubleshooting hardware issues), the general procedure is:
+
+1. **Shut down the server** gracefully through the operating system.
+2. **Turn off and disconnect all power sources**:
+
+   * Unplug all AC power cords from the power supplies.
+   * If connected to a UPS, ensure the server is no longer receiving power.
+3. **Disconnect external peripherals** if required (optional, depending on the troubleshooting procedure).
+4. **Press and hold the server's power button** for about **15–30 seconds**. This helps discharge residual electrical energy from capacitors and the system board.
+5. Wait about **30–60 seconds**.
+6. Reconnect the power cables and start the server normally.
+
+For many Dell PowerEdge servers, this procedure is referred to as a **flea power drain** or **power reset**.
+
+
