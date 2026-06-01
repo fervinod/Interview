@@ -3035,7 +3035,17 @@ Rack
  ├── Server 3 (2 PSUs)
  └── ...
 ---------------------------------------------------
+The most common data center design uses 2 rack PDUs:
 
+PDU A connected to one power source/UPS.
+PDU B connected to a separate power source/UPS.
+Dual-corded equipment connects to both PDUs for redundancy.
+
+A standard 42U or 48U rack often has two vertical (0U) PDUs mounted on the rear sides of the rack, one on each side.
+
+So if someone asks, "How many PDUs are connected to a rack?" the default assumption in most enterprise environments is 2 PDUs for redundant power
+
+----------------------
 How many PSUs are connected to a server?
 
 Typically 2 PSUs per server in a data center.
