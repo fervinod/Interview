@@ -1,0 +1,97 @@
+● What projects are you most proud of?
+● What were some excellent collaborations you’ve had?
+● What kinds of technologies are you most excited about?
+● Tell me about a time when you advocated for and pushed your own ideas forward despite opposition.
+● Tell me about a time you received constructive feedback — what was it and how did you manage it?
+● Tell me about a time you had conflict with a colleague. How did you resolve it? What did you learn?
+● How do you like to give and receive feedback? Tell me about a time where you have had to give and receive tough feedback
+
+## Collaboration & Teamwork
+
+* Tell me about a time you worked with a difficult teammate.
+* Describe a situation where you had to align multiple stakeholders with different priorities.
+* Tell me about a project where teamwork was critical to success.
+* How do you handle disagreements in technical discussions?
+* Describe a time when you gave difficult feedback to someone.
+
+## Ownership & Initiative
+
+* Tell me about a time you took ownership beyond your formal responsibilities.
+* Describe a situation where you identified a problem before others noticed it.
+* Tell me about a project you drove from idea to execution.
+* Have you ever failed to deliver something important? What happened?
+* Describe a time when you had very little guidance but still succeeded.
+
+## Conflict & Challenges
+
+* Tell me about a conflict you had with a manager or teammate.
+* Describe a time when you strongly disagreed with a decision.
+* Tell me about a mistake you made and how you handled it.
+* Describe a stressful situation and how you managed it.
+* Tell me about a time you missed a deadline.
+
+## Leadership
+
+* Tell me about a time you influenced people without authority.
+* Describe a time when you mentored someone.
+* Tell me about your biggest leadership challenge.
+* Describe a time you had to make a difficult tradeoff decision.
+* Tell me about a time you motivated a struggling team.
+
+## Execution & Impact
+
+* What’s the project you’re most proud of and why?
+* Tell me about a time you improved a process or system significantly.
+* Describe a high-impact decision you made quickly.
+* Tell me about a time you handled ambiguity.
+* Describe a project where the outcome was uncertain.
+
+## Growth & Self-Awareness
+
+* What’s a piece of critical feedback you received?
+* Tell me about a time you failed.
+* What would your teammates say is your biggest weakness?
+* Describe a time when you changed your mind after receiving new information.
+* Tell me about a skill you had to learn quickly.
+
+## Meta-Specific Themes
+
+Meta interviewers often probe around:
+
+* “Move fast”
+* Bias toward action
+* Handling ambiguity
+* Data-driven thinking
+* User impact
+* Learning quickly
+* Operating at scale
+* Cross-functional collaboration
+
+You’ll usually want to answer using the STAR format:
+
+* Situation
+* Task
+* Action
+* Result
+
+A strong Meta behavioral answer usually includes:
+
+* Clear metrics/results
+* Specific actions YOU took
+* Fast decision-making
+* Tradeoffs considered
+* Reflection/learning
+
+Example structure:
+
+> “The issue was causing 18% checkout failure. I coordinated with infra and backend teams, proposed a rollback strategy, implemented monitoring, and reduced failures to under 1% within 24 hours.”
+
+If you want, I can also help with:
+
+* Most frequently asked Meta behavioral questions for SWE specifically
+* Sample strong answers
+* Questions for E4/E5/E6 levels
+* Mock behavioral interview
+* “Tell me about yourself” for Meta
+* Meta leadership principles breakdown
+* Common follow-up probing questions interviewers ask
