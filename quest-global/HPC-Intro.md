@@ -346,3 +346,15 @@ What to memorize for tomorrow
 8. Automation and observability are differentiators for infra roles.
 
 If you’d like, I can also generate 15 likely interview questions with model answers or a one-page HPC/Slurm cheat sheet.
+
+
+Core Framework Comparison
+Understanding where each framework operates is critical for structuring a job script correctly:
+
+Framework	Architecture Type		Memory	 Model						Typical Use Case
+
+MPI (Message Passing Interface)	Multi-Node (Distributed)	Isolated per process	Inter-node communication across network
+
+OpenMP (Open Multi-Processing)		Single Node (Multi-Core)Shared across threads		Intra-node loop parallelization on CPUs
+
+CUDA (Compute Unified Device Architecture)	Hardware Accelerator (GPU)	Independent device memory	Massively parallel matrix/vector math
