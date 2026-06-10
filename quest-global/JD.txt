@@ -1,0 +1,131 @@
+Required Skills & Qualifications:
+
+    Strong experience in computer hardware design, particularly in compute cluster or server environments.
+    Familiarity with Linux system administration and OS customization (preferably SUSE Linux).
+    Understanding of system-level performance tuning and hardware-software interaction.
+    Excellent documentation and communication skills.
+
+Preferred Attributes:
+
+    Experience with hardware validation and troubleshooting tools.
+    Knowledge of high-performance computing (HPC) or distributed systems.
+    Ability to work effectively in a collaborative, cross-functional engineering environment.
+    Test-driven development mindset and attention to detail.
+    Self-starter with a proactive approach to problem-solving and continuous improvement.
+
+
+Software Focused (DevOps)
+
+Key Responsibilities:
+
+• Develop and maintain customized SUSE Linux OS images aligned with Client’s hardware
+
+and software requirements.
+
+• Use configuration management tools such as Salt or Ansible to automate and streamline
+
+system configuration.
+
+• Create and maintain comprehensive documentation for all developed processes,
+
+configurations, and tools.
+
+• Develop diagnostic scripts to integrate with existing diagnostic suites, improving system
+
+troubleshooting capabilities for both configuration and hardware-related issues.
+
+Required Skills & Qualifications:
+
+• Strong experience in computer hardware design, particularly in compute cluster or
+
+server environments.
+
+• Experience in networking design, including InfiniBand, Ethernet switches, with expertise
+
+in port mapping and configuration.
+
+• Familiarity with modern memory technologies (e.g., DDR4/DDR5, DIMM, LPDDR, HBM).
+
+• Proven experience with Linux operating system customization and image creation.
+
+• Proficiency in SaltStack, Ansible, or similar configuration management tools is a plus.
+
+• Familiarity with test-driven development practices and tools.
+
+• Excellent documentation skills with attention to detail.
+
+• Ability to work independently and collaboratively in a fast-paced environment.
+
+Preferred Attributes:
+
+• Strong problem-solving and analytical skills.
+
+• Effective communication and collaboration abilities.
+
+• Self-motivated with a proactive approach to identifying and resolving issues.
+
+• Experience in hardware troubleshooting and integration with diagnostic tools.
+
+• Comfortable working in a team-oriented environment with shared responsibilities and
+
+goals.
+
+
+
+Hardware Focused
+
+Key Responsibilities:
+
+• Design and develop compute cluster configurations optimized for performance,
+
+reliability, and scalability in KLA systems.
+
+• Select and validate hardware components including CPUs, memory, storage, networking,
+
+and specialized accelerators.
+
+• Document hardware design decisions, integration procedures, and diagnostic workflows
+
+for internal and cross-team use.
+
+• Collaborate closely with multi-functional teams including hardware engineering,
+
+software development, and system integration to ensure seamless deployment and
+
+support of Windows-based systems.
+
+Required Skills & Qualifications:
+
+• Strong experience in computer hardware design, particularly in compute cluster or
+
+server environments.
+
+• Experience in networking design, including InfiniBand, Ethernet switches, with expertise
+
+in port mapping and configuration.
+
+• s
+
+• Familiarity with Linux system administration and OS customization (preferably SUSE
+
+Linux).
+
+• Proven experience with Windows operating system customization and image creation.
+
+• Strong scripting skills (e.g., Bash, Python, PowerShell) for automation and diagnostics.
+
+• Understanding of system-level performance tuning and hardware-software interaction.
+
+• Excellent documentation and communication skills.
+
+Preferred Attributes:
+
+• Experience with hardware validation and troubleshooting tools.
+
+• Knowledge of high-performance computing (HPC) or distributed systems.
+
+• Ability to work effectively in a collaborative, cross-functional engineering environment.
+
+• Test-driven development mindset and attention to detail.
+
+• Self-starter with a proactive approach to problem-solving and continuous improvement.
