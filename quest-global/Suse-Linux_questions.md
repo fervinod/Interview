@@ -657,3 +657,15 @@ AppArmor.
 > "I have experience administering enterprise Linux environments, including RHEL and SUSE Linux. My responsibilities include server provisioning, patch management using zypper, user and access management, LVM administration, troubleshooting services, networking, security hardening with AppArmor, automation using Ansible, and supporting infrastructure across VMware and cloud platforms. I also work with CI/CD and Infrastructure as Code tools such as Terraform and Jenkins, which helps automate Linux operations at scale."
 
 This introduction aligns well with Cloud Infrastructure Engineering, Platform Engineering, and Linux Enterprise Operations roles.
+
+zypper :
+| Command         | What It Does                                   |
+| --------------- | ---------------------------------------------- |
+| `zypper patch`  | Installs vendor-recommended patches            |
+| `zypper update` | Updates packages to latest repository versions |
+
+Commands Often Used Together
+zypper refresh
+zypper list-patches
+zypper patch --dry-run
+zypper patch
